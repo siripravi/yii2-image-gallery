@@ -30,6 +30,7 @@ use yii\imagine\Image as Picture;
 class ImgManager extends Component {
     public $fkName = "fk_id";
     public $imgTable;   //{{%image}}
+  
     public $thumbVer;
     /**
      * PhpThumb options that are passed to the ThumbFactory.
@@ -166,7 +167,8 @@ class ImgManager extends Component {
 
                 $path .= $fileName;
 
-                Picture::getImagine()->open($this->_basePath . 'web\files\images\\' . $fileName)->thumbnail(new Box($options->width, $options->height))->save($path, ['quality' => 90]);
+                //Picture::getImagine()->open($this->_basePath . 'web\files\images\\' . $fileName)->thumbnail(new Box($options->width, $options->height))->save($path, ['quality' => 90]);
+                Picture::getImagine()->open($this->imagePath . $fileName)->thumbnail(new Box($options->width, $options->height))->save($path, ['quality' => 90]);
                 return $path;
             } else
             
