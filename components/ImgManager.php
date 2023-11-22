@@ -3,7 +3,7 @@
 namespace siripravi\gallery\components;
 use yii;
 use yii\base\Component;
-use siripravi\gallery\models\SliderImage;
+use siripravi\gallery\models\Image;
 use siripravi\gallery\components\ImgException;
 
 use yii\db\Expression;
