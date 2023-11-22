@@ -1,0 +1,54 @@
+@CHARSET "UTF-8";
+
+.image-select-edit{
+	background-image: url("../images/edit.png");
+        position:relative;
+	background-color: rgb(118, 182, 234);
+	background-repeat: no-repeat;
+	padding-left: 9px;
+	display: inline-block;
+	height: 46px !important;
+        width:80px !important;        
+       border:1px solid rgb(5, 5, 70);
+}
+.image-select-edit:after {
+    content: url(../images/add-plus-svgrepo-com.png);
+    font-family: FontAwesome;
+    font-style: normal;
+    font-weight: normal;
+    text-decoration: inherit;
+/*--adjust as necessary--*/
+    color: #000;
+    font-size: 24px;   
+   
+}
+.image-select-loading {
+	background-image: url(../images/ajax-loader.gif);
+	background-repeat: no-repeat;
+	background-position: center; 
+	z-index: 999;
+	opacity: 0.5;
+	background-color: #000000;
+	position: absolute;
+	left: 0px;
+	top: 0px;
+	right: 0px;
+	bottom: 0px;
+        margin: 0 5px 13px 0;
+}
+.tools-edit-image a.delete{
+     filter: alpha(opacity=100); opacity: 0;
+        -webkit-transition: all .1s ease-out;
+        -moz-transition: all .1s ease-out;
+        -o-transition: all .1s ease-out;
+        transition: all .1s ease-out;
+}
+
+.tools-edit-image:hover a.delete{
+     filter: alpha(opacity=100); opacity: 1.00;
+        -webkit-transition: all .1s ease-out;
+        -moz-transition: all .1s ease-out;
+        -o-transition: all .1s ease-out;
+        transition: all .1s ease-out;
+    
+}
