@@ -10,7 +10,7 @@ $(function() {
                     var pic_id;
                     $.ajax({
                         type: 'POST',
-                        url: '/uploader/default/remove-image',
+                        url: '/gallery/default/remove-image',
                         data: string,
                         cache: false,
                         success:
@@ -60,7 +60,7 @@ $(function() {
                         $('#ximg-'+parseInt(responseText)+' form').hide();
                         
                      }).attr('id','img-'+responseText)
-                                  .attr('src','/uploader/default/create?id='+responseText.toString()+'&version=small&key=' + new Date().getTime());
+                                  .attr('src','/gallery/default/create?id='+responseText.toString()+'&version=small&key=' + new Date().getTime());
                             console.log('responseText'+responseText);  
                             $.pjax.reload({container: '#gallery', async: false});  
                           //   window.location.reload();
