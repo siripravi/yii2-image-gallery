@@ -20,7 +20,7 @@ class Image extends \yii\db\ActiveRecord
      */
     public static function tableName()
     {
-        return \Yii::$app->gallery->tableName;  //'{{%image}}';
+        return \Yii::$app->gallery->imgTable;  //'{{%image}}';
     }
 
     /**
