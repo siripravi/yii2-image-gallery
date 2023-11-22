@@ -121,7 +121,7 @@ class ImgManager extends Component {
             $image->filename =  md5($file->baseName.time()).'.'.$file->extension;		
             $image->byteSize = $file->size;
             $image->mimeType = $file->type;
-			$image->slider_id = $fk;
+			$image->{$this->fkName} = $fk;
             if ($path !== null)
                 $image->path = trim($path, '\\');            
             if ($image->save() === false) {               
