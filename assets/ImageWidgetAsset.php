@@ -1,6 +1,6 @@
 <?php
 
-namespace siripravi\gallery\widgets\assets;
+namespace siripravi\gallery\assets;
 
 use yii\web\AssetBundle;
 
