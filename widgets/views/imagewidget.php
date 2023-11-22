@@ -1,8 +1,6 @@
 <?php
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
-use yii\widgets\ListView;
-use yii\data\ArrayDataProvider;
 use yii\widgets\Pjax;
 ?>
 <style type="text/css">
@@ -37,7 +35,7 @@ use yii\widgets\Pjax;
     $i = 0;
     while ($i < $count) {
         if ($i % 3 == 0)
-            echo '<div class="row justify-content-center row-cols-sm-2 row-cols-md-3 row-cols-lg-4 row-cols-xl-5">';
+            echo '<div class="row justify-content-center">';
 
     ?>
         <div class="col mt-4">
@@ -46,13 +44,12 @@ use yii\widgets\Pjax;
                     <a id="<?= $images[$i]['id'];  ?>" title="Remove this picture" class="delete">X
                     </a>
                 </div>
-                <?= Html::img($images[$i]['imageSrc'], ['alt' => "", 'id' => 'pimg-' . ($i + 1), 'class' => 'card-img img-fullsize']);    ?>
-
+                <?= Html::img($images[$i]['imageSrc'], ['alt' => "", 'id' => 'pimg-' . ($i + 1), 'class' => 'card-img img-fullsize']); ?>
                 <div class="caption">
                     <p class="flex-text text-center"><?= $images[$i]['filename'];  ?></p>
                 </div>
             </div>
-        </div> <!-- /.col-xs-6.col-md-3 -->
+        </div>
     <?php $i++;
         if ($i % 3 == 0)
             echo '</div>';

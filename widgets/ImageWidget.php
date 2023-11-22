@@ -11,7 +11,6 @@ use yii\helpers\Url;
 
 class ImageWidget extends Widget
 {
-
     public $key;
     public $imageMaxCount = 10;
     private $imageData;
@@ -28,16 +27,10 @@ class ImageWidget extends Widget
         $fkName = Yii::$app->gallery->fkName;  // 'fk_id'
         $imgTable = Yii::$app->gallery->imgTable;
         $sql = "SELECT
-        id, ".$fkName.", filename                       
-        FROM ".$imgTable."
-        where ".$fkName." = ".$this->key;
-      /*  $images = (new \yii\db\Query())
-            ->select(['id', $fkName, 'filename'])
-            ->from($imgTable)
-            ->where([$fkName => $this->key])
-            // ->limit(10)
-            ->all()->array();*/
-            $images = Image::findBySql($sql)->all();
+        id, " . $fkName . ", filename                       
+        FROM " . $imgTable . "
+        where " . $fkName . " = " . $this->key;
+        $images = Image::findBySql($sql)->all();
         $data = ArrayHelper::toArray($images, [
             'siripravi\gallery\models\Image' => [
                 'id',
@@ -60,8 +53,7 @@ class ImageWidget extends Widget
         $this->imageData = $this->getImages($this->key);
         return $this->render('imagewidget', ['images' => $this->imageData, 'uploadUrl' => $this->uploadUrl]);
     }
-
-   /* public function getViewPath()
+    /* public function getViewPath()
     {
         return '@app/modules/gallery/views/';
     }*/
