@@ -121,7 +121,7 @@ class ImgManager extends Component
                 //! delete the previously uploaded file
                 $this->delete($id);
             } else
-                $image = new \app\modules\gallery\models\Image();
+                $image = new \siripravi\gallery\models\Image();
 
             $image->extension = strtolower($file->extension);
             $image->filename = $file->name;

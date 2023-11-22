@@ -117,12 +117,12 @@ class DefaultController extends Controller
 
     public function actionUploadPhoto()
     {
-        $imid = $_GET['imid'];
+        $imid = $_GET['fk'];
         $img = UploadedFile::getInstanceByName('file');
         $savedImage = \Yii::$app->gallery->save($img, $imid, '', '');
         \Yii::debug('here');
-        !empty($savedImage) ? $mid = $savedgallery->id : '';
-        $mid = $savedgallery->id;
+        !empty($savedImage) ? $mid = $savedImage->id : '';
+        $mid = $savedImage->id;
         $this->images[] = $imid;
         $session =  \Yii::$app->session;
         $session['images'] = $this->images;
