@@ -201,7 +201,7 @@ class ImgManager extends Component
 
                 $path .= $fileName;
 
-                \yii\imagine\Image::getImagine()->open('@webroot/files/images/' . $fileName)->thumbnail(new Box($options->width, $options->height))->save($path, ['quality' => 90]);
+                \yii\imagine\Image::getImagine()->open('@web/files/images/' . $fileName)->thumbnail(new Box($options->width, $options->height))->save($path, ['quality' => 90]);
                 return $path;
             } else
                 //return $id;
