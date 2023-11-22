@@ -1,6 +1,7 @@
 <?php
 
 namespace siripravi\gallery\components;
+
 use yii;
 use yii\base\Component;
 use siripravi\gallery\models\Image;
@@ -13,6 +14,7 @@ use Imagine\Image\Box;
 use Imagine\Image\Palette\RGB;
 use Imagine\Image\Point;
 use yii\imagine\Image as Picture;
+
 /**
  * Image manager class file.
  * @author Christoffer Niska <ChristofferNiska@gmail.com>
@@ -27,10 +29,11 @@ use yii\imagine\Image as Picture;
  */
 //require_once(dirname(__FILE__).'/../vendors/phpthumb/ThumbLib.inc.php'); // Yii::import() will not work in this case.
 
-class ImgManager extends Component {
+class ImgManager extends Component
+{
     public $fkName = "fk_id";
     public $imgTable;   //{{%image}}
-  
+
     public $thumbVer;
     /**
      * PhpThumb options that are passed to the ThumbFactory.
@@ -77,7 +80,8 @@ class ImgManager extends Component {
     /**
      * Initializes the component.
      */
-    public function init() {
+    public function init()
+    {
         self::$_thumbOptions = $this->thumbOptions;
         self::$_imagePath = $this->getImagePath(true);
 
@@ -92,7 +96,8 @@ class ImgManager extends Component {
      * @return string the URL.
      * @throws CException if the version is not defined.
      */
-    public function getURL($id, $version, $absolute = false) {
+    public function getURL($id, $version, $absolute = false)
+    {
         if (isset($this->versions[$version])) {
             $image = $this->loadModel($id);
             $path = $this->getVersionPath($version) . $image->getPath() . $this->resolveFileName($image);
@@ -109,26 +114,27 @@ class ImgManager extends Component {
      * @return Image the image record.
      * @throws ImageException if saving the image record or file fails.
      */
-    public function save($file, $fk = null, $path = null, $id = null) {
+    public function save($file, $fk = null, $path = null, $id = null)
+    {
         $trx = \Yii::$app->db->beginTransaction();
         try {
-             if ($id > 0) {
-                $image = \siripravi\gallery\models\Image::findOne($id);
+            if ($id > 0) {
+                $image = Image::findOne($id);
                 $this->delete($id);
             } else
-                $image = new \siripravi\gallery\models\Image();
- 
+                $image = new Image();
+
             $image->extension = strtolower($file->extension);
-            $image->filename =  md5($file->baseName.time()).'.'.$file->extension;		
+            $image->filename =  md5($file->baseName . time()) . '.' . $file->extension;
             $image->byteSize = $file->size;
             $image->mimeType = $file->type;
-			$image->{$this->fkName} = $fk;
+            $image->{$this->fkName} = $fk;
             if ($path !== null)
-                $image->path = trim($path, '\\');            
-            if ($image->save() === false) {               
+                $image->path = trim($path, '\\');
+            if ($image->save() === false) {
             }
-             \Yii::debug($image->attributes);
-           
+            \Yii::debug($image->attributes);
+
             $path = $this->resolveImagePath($image);
 
             if (!file_exists($path))
@@ -154,12 +160,13 @@ class ImgManager extends Component {
      * @param string $version the image version.
      * @return ThumbBase
      */
-    public function createVersion($id, $version) {
+    public function createVersion($id, $version)
+    {
         if (isset($this->versions[$version])) {
             $image = $this->loadModel($id);
             if ($image != null) {
                 $fileName = $this->resolveFileName($image);
-                $options = ImgOptions::create($this->versions[$version]);               
+                $options = ImgOptions::create($this->versions[$version]);
                 $path = $this->resolveImageVersionPath($image, $version);
                 if (!file_exists($path))
                     if (!$this->createDirectory($path))
@@ -171,7 +178,7 @@ class ImgManager extends Component {
                 Picture::getImagine()->open($this->imagePath . $fileName)->thumbnail(new Box($options->width, $options->height))->save($path, ['quality' => 90]);
                 return $path;
             } else
-            
+
                 throw new ImgException(Img::t('error', 'Failed to create version! Image could not be found.'));
         } else
             throw new ImgException(Img::t('error', 'Failed to create version! Version is unknown.'));
@@ -183,7 +190,8 @@ class ImgManager extends Component {
      * @return boolean whether the image was deleted.
      * @throws ImgException if the image cannot be deleted.
      */
-    public function delete($id) {
+    public function delete($id)
+    {
         /** @var Image $image */
         $image = Image::findOne($id);
 
@@ -209,7 +217,8 @@ class ImgManager extends Component {
      * @return boolean whether the image was deleted.
      * @throws ImgException if the image cannot be deleted.
      */
-    protected function deleteVersion($image, $version) {
+    protected function deleteVersion($image, $version)
+    {
         if (isset($this->versions[$version])) {
             $path = $this->resolveImageVersionPath($image, $version) . $this->resolveFileName($image);
 
@@ -224,7 +233,8 @@ class ImgManager extends Component {
      * @param integer $id the image id.
      * @return ThumbBase
      */
-    public function loadThumb($id) {
+    public function loadThumb($id)
+    {
         $image = $this->loadModel($id);
 
         if ($image !== null) {
@@ -240,7 +250,8 @@ class ImgManager extends Component {
      * @param integer $id the image id.
      * @return Image
      */
-    public function loadModel($id) {
+    public function loadModel($id)
+    {
         return Image::findOne($id);
     }
 
@@ -249,7 +260,8 @@ class ImgManager extends Component {
      * @param Image $image the image model.
      * @return string the file name.
      */
-    protected function resolveFileName($image) {
+    protected function resolveFileName($image)
+    {
         if (!empty($image->filename))
             return $image->filename; // . '-' . $image->id . '.' . $image->extension; // 1.2.0 ->
         else
@@ -261,7 +273,8 @@ class ImgManager extends Component {
      * @param Image $image the image model.
      * @return string the path.
      */
-    protected function resolveImagePath($image) {
+    protected function resolveImagePath($image)
+    {
         return $this->getImagePath(true) . $image->getPath();
     }
 
@@ -271,7 +284,8 @@ class ImgManager extends Component {
      * @param string $version the image version.
      * @return string the path.
      */
-    protected function resolveImageVersionPath($image, $version) {
+    protected function resolveImageVersionPath($image, $version)
+    {
         return $this->getVersionPath($version, true) . $image->getPath();
     }
 
@@ -280,7 +294,8 @@ class ImgManager extends Component {
      * @param boolean $absolute whether or not the path should be absolute.
      * @return string the path.
      */
-    protected function getImagePath($absolute = false) {
+    protected function getImagePath($absolute = false)
+    {
         $path = '';
 
         if ($absolute === true)
@@ -295,8 +310,9 @@ class ImgManager extends Component {
      * @param boolean $absolute whether or not the path should be absolute.
      * @return string the path.
      */
-    protected function getVersionPath($version, $absolute = false) {
-        $path = $this->getVersionBasePath($absolute) . $version . '\\';       
+    protected function getVersionPath($version, $absolute = false)
+    {
+        $path = $this->getVersionBasePath($absolute) . $version . '\\';
         // Might be a new version so we need to create the path if it doesn't exist.
         if (!file_exists($path))
             mkdir($path, null, true);
@@ -309,7 +325,8 @@ class ImgManager extends Component {
      * @param boolean $absolute whether or not the path should be absolute.
      * @return string the path.
      */
-    protected function getVersionBasePath($absolute = false) {
+    protected function getVersionBasePath($absolute = false)
+    {
         $path = '';
 
         if ($absolute === true)
@@ -327,11 +344,12 @@ class ImgManager extends Component {
      * Returns the base path.
      * @return string the path.
      */
-    protected function getBasePath() {
+    protected function getBasePath()
+    {
         if ($this->_basePath !== null)
             return $this->_basePath;
         else
-           return $this->_basePath = realpath(\Yii::$app->basePath ). '\\' ;		
+            return $this->_basePath = realpath(\Yii::$app->basePath) . '\\';
     }
 
     /**
@@ -342,7 +360,8 @@ class ImgManager extends Component {
      * @return boolean whether or not the directory was created.
      * @since 1.2.1
      */
-    protected function createDirectory($path, $mode = 0777, $recursive = true) {
+    protected function createDirectory($path, $mode = 0777, $recursive = true)
+    {
         return mkdir($path, $mode, $recursive);
     }
 
@@ -352,7 +371,8 @@ class ImgManager extends Component {
      * @return string the normalized string.
      * @since 1.2.0
      */
-    protected function normalizeString($string) {
+    protected function normalizeString($string)
+    {
         $string = str_replace(str_split('/\?%*:|"<>. '), '', $string);
         $string = preg_replace('~&([a-z]{1,2})(acute|cedil|circ|grave|lig|orn|ring|slash|th|tilde|uml);~i', '$1', htmlentities($string, ENT_QUOTES, 'UTF-8'));
         return $string;
@@ -363,11 +383,9 @@ class ImgManager extends Component {
      * @param string $filePath the image file path.
      * @return ImgThumb
      */
-    protected static function thumbFactory($filePath) {
+    protected static function thumbFactory($filePath)
+    {
         $phpThumb = PhpThumbFactory::create($filePath, self::$_thumbOptions);
         return new ImgThumb($phpThumb);
     }
-	
-	
-
 }

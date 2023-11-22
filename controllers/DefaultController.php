@@ -20,32 +20,6 @@ class DefaultController extends Controller
      */
 
     public $images;
-    public function actionIndex()
-    {
-        /* $lgid = 3;
-
-        if (!empty($lgid)) {
-            $sql = "SELECT
-                        id                        
-                        FROM tbl_image
-                        where name = '$lgid' ";
-            $count = 0;
-            $images = Image::findBySql($sql)->all();
-            $dataProvider = new ActiveDataProvider([
-            'query' => Image::findBySql($sql),
-            'pagination' => [
-                'pageSize' => 10,
-            ],
-        ]);
-        }
-        $pics = [];
-        
-        foreach ($images as $img) {   
-          
-            $pics[$img->id] = $img->filename;
-        } */
-        return $this->render('index'); //, ['lgid' => $lgid, 'pics' => $pics,'dataProvider'=>$dataProvider]);
-    }
 
     /**
      * Creates and renders a new version of a specific image.
@@ -79,29 +53,6 @@ class DefaultController extends Controller
         fpassthru($fp);
     }
 
-    public function actionUploadPics()
-    {
-        /* $pics = Array(5);
-        $images = Array();
-        $session = \Yii::$app->session; 
-        $lgid = $session['Wizard.form'];
-        //var_dump($lgid); die;			  
-        if (!empty($lgid)) {
-            $sql = "SELECT
-                        id                        
-                        FROM tbl_image
-                        where fk_id = '$lgid' ";
-
-            $count = 0;
-            $images = Image::model()->findAllBySql($sql);
-        }      
-        foreach ($images as $img) {          
-            $pics[$img->id] = $img->filename;           
-        }
-        $this->render('/default/_adPics', array('lgid' => $lgid, 'pics' => $pics));
-        */
-    }
-
     public function actionRemoveImage()
     {
         $id = isset($_POST['id']) ? $_POST['id'] : '';
@@ -114,7 +65,6 @@ class DefaultController extends Controller
             die;
         }
     }
-
     public function actionUploadPhoto()
     {
         $imid = $_GET['fk'];
