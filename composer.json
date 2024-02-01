@@ -16,7 +16,13 @@
     },
     "autoload": {
         "psr-4": {
-            "siripravi\\gallery\\": ""
+            "siripravi\\gallery\\": "src/"
         }
-    }
+    },
+    "repositories": [
+        {
+          "type": "composer",
+          "url": "https://asset-packagist.org"
+        }
+      ]
 }
