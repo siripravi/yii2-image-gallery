@@ -1,28 +1,39 @@
 {
-    "name": "siripravi/yii2-image-gallery",
-    "description": "Image Gallery upload for yii2",
-    "type": "yii2-extension",
-    "keywords": ["yii2","extension","products"],
-    "license": "BSD-3-Clause",
-    "authors": [
-        {
-            "name": "Purnachandra Rao Valluri",
-            "email": "provdigi@gmail.com"
-        }
-    ],
-    "require": {
-        "yiisoft/yii2": "~2.0"
-        
+  "name": "siripravi/yii2-image-gallery",
+  "description": "Image Gallery upload for yii2",
+  "type": "yii2-extension",
+  "keywords": [
+    "yii2",
+    "extension",
+    "products"
+  ],
+  "license": "BSD-3-Clause",
+  "authors": [
+    {
+      "name": "Purnachandra Rao Valluri",
+      "email": "provdigi@gmail.com"
+    }
+  ],
+  "require": {
+    "yiisoft/yii2": "~2.0"
+  },
+  "config": {
+    "fxp-asset": {
+      "enabled": false
     },
-    "autoload": {
-        "psr-4": {
-            "siripravi\\gallery\\": "src/"
-        }
-    },
-    "repositories": [
-        {
-          "type": "composer",
-          "url": "https://asset-packagist.org"
-        }
-      ]
+    "allow-plugins": {
+      "yiisoft/yii2-composer": true
+    }
+  },
+  "autoload": {
+    "psr-4": {
+      "siripravi\\gallery\\": "src/"
+    }
+  },
+  "repositories": [
+    {
+      "type": "composer",
+      "url": "https://asset-packagist.org"
+    }
+  ]
 }
