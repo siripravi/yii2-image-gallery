@@ -1,1 +1,1 @@
-"# yii2-image-gallery" 
+"# yii2-image-gallery"

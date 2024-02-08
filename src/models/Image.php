@@ -1,6 +1,9 @@
 <?php
+
 namespace siripravi\gallery\models;
+
 use Yii;
+
 /**
  * This is the model class for table "image".
  *

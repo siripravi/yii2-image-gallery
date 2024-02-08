@@ -1,4 +1,5 @@
 <?php
+
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 use yii\widgets\Pjax;
@@ -9,20 +10,20 @@ use yii\widgets\Pjax;
     }
 </style>
 <?php
-    $count = count($images);
+$count = count($images);
 ?>
 <div class="row justify-content-center">
     <div id="div_image_select_<?php echo $count ?>" class="col-lg-12 image_select" style="">
         <a id="btn_change_image_<?php echo ($count + 1); ?>" class="image-select-edit rel" data-toggle="tooltip" title="click to choose a picture">
             <span id="image-select-add-<?php echo ($count + 1); ?>" class=""></span>
             <?php
-                $form = ActiveForm::begin([
-                    'id' => 'frm_img_select' . $count,
-                    'action' => $uploadUrl,
-                    'options' => ['class' => 'form-horizontal', 'enctype' => 'multipart/form-data'],
-                ])
+            $form = ActiveForm::begin([
+                'id' => 'frm_img_select' . $count,
+                'action' => $uploadUrl,
+                'options' => ['class' => 'form-horizontal', 'enctype' => 'multipart/form-data'],
+            ])
             ?>
-                <input type="hidden" name="pict" value="<?php echo ($count + 1); ?>" />
+            <input type="hidden" name="pict" value="<?php echo ($count + 1); ?>" />
             <?php ActiveForm::end() ?>
         </a>
     </div>
@@ -31,7 +32,7 @@ use yii\widgets\Pjax;
 <?php Pjax::begin(['id' => 'gallery']) ?>
 <div class="container-fluid mb-4">
     <?php
-    
+
     $i = 0;
     while ($i < $count) {
         if ($i % 3 == 0)

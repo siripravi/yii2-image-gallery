@@ -1,6 +1,7 @@
 <?php
 
 namespace siripravi\gallery\components;
+
 use yii\base\Component;
 
 /**
@@ -67,11 +68,11 @@ class ImgOptions extends Component
 	 * @param integer $maxWidth the maximum width.
 	 * @param integer $maxHeight the maximum height.
 	 */
-	public function setResize($maxWidth=0,$maxHeight=0)
+	public function setResize($maxWidth = 0, $maxHeight = 0)
 	{
-		$this->width=$maxWidth;
-		$this->height=$maxHeight;
-		$this->resizeMethod=Img::METHOD_RESIZE;
+		$this->width = $maxWidth;
+		$this->height = $maxHeight;
+		$this->resizeMethod = Img::METHOD_RESIZE;
 	}
 
 	/**
@@ -80,11 +81,11 @@ class ImgOptions extends Component
 	 * @param integer $width the width to crop the image to.
 	 * @param integer $height the height to crop the image to.
 	 */
-	public function setAdaptiveResize($width,$height)
+	public function setAdaptiveResize($width, $height)
 	{
-		$this->width=$width;
-		$this->height=$height;
-		$this->resizeMethod=Img::METHOD_ADAPTIVE_RESIZE;
+		$this->width = $width;
+		$this->height = $height;
+		$this->resizeMethod = Img::METHOD_ADAPTIVE_RESIZE;
 	}
 
 	/**
@@ -93,8 +94,8 @@ class ImgOptions extends Component
 	 */
 	public function setResizePercent($percent)
 	{
-		$this->percent=$percent;
-		$this->resizeMethod=Img::METHOD_RESIZE_PERCENT;
+		$this->percent = $percent;
+		$this->resizeMethod = Img::METHOD_RESIZE_PERCENT;
 	}
 
 	/**
@@ -105,13 +106,13 @@ class ImgOptions extends Component
 	 * @param integer $width the width to crop with.
 	 * @param integer $height the height to crop with.
 	 */
-	public function setCrop($x,$y,$width,$height)
+	public function setCrop($x, $y, $width, $height)
 	{
-		$this->cropX=$x;
-		$this->cropY=$y;
-		$this->cropWidth=$width;
-		$this->cropHeight=$height;
-		$this->cropMethod=Img::METHOD_CROP;
+		$this->cropX = $x;
+		$this->cropY = $y;
+		$this->cropWidth = $width;
+		$this->cropHeight = $height;
+		$this->cropMethod = Img::METHOD_CROP;
 	}
 
 	/**
@@ -119,21 +120,21 @@ class ImgOptions extends Component
 	 * @param integer $width the width to crop with.
 	 * @param integer $height the height to crop with, if null the height will be the same as the width.
 	 */
-	public function setCropFromCenter($width,$height=null)
+	public function setCropFromCenter($width, $height = null)
 	{
-		$this->cropWidth=$width;
-		$this->cropHeight=$height;
-		$this->cropMethod=Img::METHOD_CROP_CENTER;
+		$this->cropWidth = $width;
+		$this->cropHeight = $height;
+		$this->cropMethod = Img::METHOD_CROP_CENTER;
 	}
 
 	/**
 	 * When applied the image is rotated by 90 degrees in the specified direction.
 	 * @param string $direction the direction to rotate the image in.
 	 */
-	public function setRotate($direction=Img::DIRECTION_CLOCKWISE)
+	public function setRotate($direction = Img::DIRECTION_CLOCKWISE)
 	{
-		$this->rotateDirection=$direction;
-		$this->rotateMethod=Img::METHOD_ROTATE;
+		$this->rotateDirection = $direction;
+		$this->rotateMethod = Img::METHOD_ROTATE;
 	}
 
 	/**
@@ -143,8 +144,8 @@ class ImgOptions extends Component
 	 */
 	public function setRotateDegrees($degrees)
 	{
-		$this->rotateDegrees=$degrees;
-		$this->rotateMethod=Img::METHOD_ROTATE_DEGREES;
+		$this->rotateDegrees = $degrees;
+		$this->rotateMethod = Img::METHOD_ROTATE_DEGREES;
 	}
 
 	/**
@@ -153,8 +154,8 @@ class ImgOptions extends Component
 	 */
 	public function __toArray()
 	{
-		$result=array();
-		$properties=array(
+		$result = array();
+		$properties = array(
 			'resizeWidth',
 			'resizeHeight',
 			'resizePercent',
@@ -168,8 +169,8 @@ class ImgOptions extends Component
 			'rotateDegrees',
 			'rotateMethod',
 		);
-		foreach($properties as $name)
-			$result[$name]=$this->{$name};
+		foreach ($properties as $name)
+			$result[$name] = $this->{$name};
 		return $result;
 	}
 
@@ -180,10 +181,10 @@ class ImgOptions extends Component
 	 */
 	public static function create($options)
 	{
-		$result=new ImgOptions();
-		foreach($options as $name=>$value)
-			if(property_exists($result,$name))
-				$result->{$name}=$value;
+		$result = new ImgOptions();
+		foreach ($options as $name => $value)
+			if (property_exists($result, $name))
+				$result->{$name} = $value;
 		return $result;
 	}
 }

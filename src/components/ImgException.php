@@ -1,4 +1,5 @@
 <?php
+
 namespace siripravi\gallery\components;
 
 /**

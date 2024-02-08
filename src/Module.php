@@ -1,5 +1,7 @@
 <?php
+
 namespace siripravi\gallery;
+
 /**
  * gallery module definition class
  */
@@ -51,4 +53,3 @@ class Module extends \yii\base\Module
         ];
     }
 }
-?>
