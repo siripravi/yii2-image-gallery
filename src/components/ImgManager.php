@@ -58,7 +58,7 @@ class ImgManager extends Component
     /**
      * @property string the relative path where to store images.
      */
-    public $imagePath = 'web\files\images\\';
+    public $imagePath = 'uploads';
 
     /**
      * @property array the image versions.
@@ -101,7 +101,7 @@ class ImgManager extends Component
         if (isset($this->versions[$version])) {
             $image = $this->loadModel($id);
             $path = $this->getVersionPath($version) . $image->getPath() . $this->resolveFileName($image);
-            return \Yii::$app->request->getBaseUrl($absolute) . '/' . $path;
+            return \Yii::$app->request->getBaseUrl($absolute) . DIRECTORY_SEPARATOR . $path;
         } else
             throw new ImgException(Img::t('error', 'Failed to get image URL! Version is unknown.'));
     }
@@ -130,7 +130,7 @@ class ImgManager extends Component
             $image->mimeType = $file->type;
             $image->{$this->fkName} = $fk;
             if ($path !== null)
-                $image->path = trim($path, '\\');
+                $image->path = trim($path, DIRECTORY_SEPARATOR);
             if ($image->save() === false) {
             }
             \Yii::debug($image->attributes);
@@ -142,7 +142,7 @@ class ImgManager extends Component
                     throw new ImgException(Img::t('error', 'Failed to save image! Directory could not be created.'));
 
             $path .= $this->resolveFileName($image);
-
+           
             if ($file->saveAs($path) === false)
                 throw new ImgException(Img::t('error', 'Failed to save image! File could not be saved.'));
 
@@ -166,17 +166,19 @@ class ImgManager extends Component
             $image = $this->loadModel($id);
             if ($image != null) {
                 $fileName = $this->resolveFileName($image);
+                $imagePath = $this->resolveImagePath($image);
                 $options = ImgOptions::create($this->versions[$version]);
                 $path = $this->resolveImageVersionPath($image, $version);
+              
                 if (!file_exists($path))
                     if (!$this->createDirectory($path))
                         throw new ImgException(Img::t('error', 'Failed to create version! Directory could not be created.'));
 
-                $path .= $fileName;
-
+                $thumbPath = $path.DIRECTORY_SEPARATOR.$fileName;
+             
                 //Picture::getImagine()->open($this->_basePath . 'web\files\images\\' . $fileName)->thumbnail(new Box($options->width, $options->height))->save($path, ['quality' => 90]);
-                Picture::getImagine()->open($this->imagePath . $fileName)->thumbnail(new Box($options->width, $options->height))->save($path, ['quality' => 90]);
-                return $path;
+                Picture::getImagine()->open($imagePath .DIRECTORY_SEPARATOR. $fileName)->thumbnail(new Box($options->width, $options->height))->save($thumbPath, ['quality' => 90]);
+                return $thumbPath;
             } else
 
                 throw new ImgException(Img::t('error', 'Failed to create version! Image could not be found.'));
@@ -275,7 +277,7 @@ class ImgManager extends Component
      */
     protected function resolveImagePath($image)
     {
-        return $this->getImagePath(true) . $image->getPath();
+        return $this->getImagePath(true) . $image->getPath().DIRECTORY_SEPARATOR;
     }
 
     /**
@@ -312,7 +314,8 @@ class ImgManager extends Component
      */
     protected function getVersionPath($version, $absolute = false)
     {
-        $path = $this->getVersionBasePath($absolute) . $version . '\\';
+        $path = $this->getVersionBasePath($absolute) . $version ;
+        
         // Might be a new version so we need to create the path if it doesn't exist.
         if (!file_exists($path))
             mkdir($path, null, true);
@@ -335,7 +338,7 @@ class ImgManager extends Component
         if ($this->_versionBasePath !== null)
             $path .= $this->_versionBasePath;
         else
-            $path .= $this->_versionBasePath = $this->getImagePath() . 'versions\\';
+            $path .= $this->_versionBasePath = $this->getImagePath() . DIRECTORY_SEPARATOR.'versions'.DIRECTORY_SEPARATOR;
 
         return $path;
     }
