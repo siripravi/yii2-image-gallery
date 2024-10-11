@@ -40,7 +40,7 @@ $count = count($images);
 
     ?>
         <div class="col-4 mt-4">
-        <div class="card" style="width:500px">
+        <div class="card" style="width:240px">
                 <div class="tools-edit-image">
                     <a id="<?= $images[$i]['id'];  ?>" title="Remove this picture" class="delete">X
                     </a>
