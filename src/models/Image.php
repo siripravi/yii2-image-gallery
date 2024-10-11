@@ -96,7 +96,7 @@ class Image extends \yii\db\ActiveRecord
         if (file_exists($filename)) {
             unlink($filename);
         }*/
-        \Yii::$app->gallery->delete($this->id)
+        \Yii::$app->gallery->delete($this->id);
         parent::afterDelete();
     }
 }
