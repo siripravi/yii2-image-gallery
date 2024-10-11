@@ -15,7 +15,7 @@ class ImageWidgetAsset extends AssetBundle
     public $css = [
         // '//maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css',      
         'css/image-select.css',
-        'css/imagewidget.css',
+       // 'css/imagewidget.css',
         // 'css/olx.css'
     ];
 

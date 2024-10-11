@@ -2,24 +2,24 @@
 
 .image-select-edit {
   background-image: url("../images/edit.png");
-  position: relative;
+  position: absolute;
   background-color: rgb(118, 182, 234);
   background-repeat: no-repeat;
+  margin-top:14px;
   padding-left: 9px;
   display: inline-block;
-  height: 46px !important;
-  width: 80px !important;
-  border: 1px solid rgb(5, 5, 70);
+  height: 42px !important;
+  width: 39px !important;
+  border-radius:50px;
+  border: 2px solid rgb(5, 5, 70);
 }
-.image-select-edit:after {
-  content: url(../images/add-plus-svgrepo-com.png);
-  font-family: FontAwesome;
+.image-select-edit:before {  
+  content: "";  
   font-style: normal;
   font-weight: normal;
   text-decoration: inherit;
-  /*--adjust as necessary--*/
-  color: #000;
-  font-size: 24px;
+  /*--adjust as necessary--*/ 
+  font-size: 22px;
 }
 .image-select-loading {
   background-image: url(../images/ajax-loader.gif);
