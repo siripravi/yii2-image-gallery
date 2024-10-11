@@ -400,7 +400,7 @@ class ImgManager extends Component
     public function findImage($fk,$count){
         $fkName = $this->fkName;
         $image = Image::findOne([$fkName => $fk]);
-        if($empty($image)){
+        if(empty($image)){
             $image = new Image;
         }
         return $image;
