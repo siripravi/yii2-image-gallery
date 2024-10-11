@@ -128,7 +128,7 @@ class ImgManager extends Component
            
                 $image = $this->findImage($fk,$count);//Image::findOne([$fkName => $fk]);
            
-            $image = empty($image)  ?  new Image();
+           
             $image->extension = strtolower($file->extension);
             $image->filename =  md5($file->baseName . time()) . '.' . $file->extension;
             $image->byteSize = $file->size;
