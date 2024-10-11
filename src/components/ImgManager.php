@@ -397,7 +397,7 @@ class ImgManager extends Component
         return new ImgThumb($phpThumb);
     }
 
-    public findImage($fk,$count){
+    public function findImage($fk,$count){
         $fkName = $this->fkName;
         $image = Image::findOne([$fkName => $fk]);
         if($empty($image)){
