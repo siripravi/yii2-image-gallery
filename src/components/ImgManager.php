@@ -125,7 +125,7 @@ class ImgManager extends Component
             } else
                 $image = new Image();
             if($count == 1){
-                $image = Image::findOne([{$this->fkName} => $fk]);
+                $image = Image::findOne(['{$this->fkName}' => $fk]);
             }
             $image->extension = strtolower($file->extension);
             $image->filename =  md5($file->baseName . time()) . '.' . $file->extension;
