@@ -20,7 +20,7 @@ class ImageWidget extends Widget
     {
         parent::init();
         $this->imageData = array($this->imageMaxCount);
-        $this->uploadUrl = Url::to(['/gallery/default/upload-photo', 'fk' => $this->key]);
+        $this->uploadUrl = Url::to(['/gallery/default/upload-photo', 'fk' => $this->key,'count'=>$this->imageMaxCount]);
     }
     public function getImages()
     {

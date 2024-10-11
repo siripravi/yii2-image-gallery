@@ -114,16 +114,19 @@ class ImgManager extends Component
      * @return Image the image record.
      * @throws ImageException if saving the image record or file fails.
      */
-    public function save($file, $fk = null, $path = null, $id = null)
+    public function save($file, $fk = null, $path = null, $id = null,$count)
     {
         $trx = \Yii::$app->db->beginTransaction();
         try {
+           
             if ($id > 0) {
                 $image = Image::findOne($id);
                 $this->delete($id);
             } else
                 $image = new Image();
-
+            if($count == 1){
+                $image = Image::findOne([{$this->fkName} => $fk]);
+            }
             $image->extension = strtolower($file->extension);
             $image->filename =  md5($file->baseName . time()) . '.' . $file->extension;
             $image->byteSize = $file->size;

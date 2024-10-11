@@ -65,18 +65,19 @@ class DefaultController extends Controller
             die;
         }
     }
-    public function actionUploadPhoto()
+    public function actionUploadPhoto($fk,$count)
     {
-        $imid = $_GET['fk'];
+        //$imid = $_GET['fk'];
         $img = UploadedFile::getInstanceByName('file');
-        $savedImage = \Yii::$app->gallery->save($img, $imid, '', '');
+       
+        $savedImage = \Yii::$app->gallery->save($img, $fk, '', '',$count);
         \Yii::debug('here');
         !empty($savedImage) ? $mid = $savedImage->id : '';
         $mid = $savedImage->id;
-        $this->images[] = $imid;
+        $this->images[] = $fk;
         $session =  \Yii::$app->session;
         $session['images'] = $this->images;
-        if (!empty($mid))
+        if (!empty($fk))
             echo $mid;
         else
             echo 'removed';
