@@ -39,7 +39,7 @@ $count = count($images);
             echo '<div class="row justify-content-center">';
 
     ?>
-        <div class="col mt-4">
+        <div class="col-4 mt-4">
         <div class="card" style="width:500px">
                 <div class="tools-edit-image">
                     <a id="<?= $images[$i]['id'];  ?>" title="Remove this picture" class="delete">X
