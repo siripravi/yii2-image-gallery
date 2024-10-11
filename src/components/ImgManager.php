@@ -116,7 +116,7 @@ class ImgManager extends Component
      */
     public function save($file, $fk = null, $path = null, $id = null,$count)
     {
-        $fkName = $this->fkName;
+       
         $trx = \Yii::$app->db->beginTransaction();
 
         try {
@@ -125,10 +125,10 @@ class ImgManager extends Component
                 $image = Image::findOne($id);
                 $this->delete($id);
             } 
-            if($count == 1){
-                $image = Image::findOne([$fkName => $fk]);
-            }
-            $image = $image  ??  new Image();
+           
+                $image = $this->findImage($fk,$count);//Image::findOne([$fkName => $fk]);
+           
+            $image = empty($image)  ?  new Image();
             $image->extension = strtolower($file->extension);
             $image->filename =  md5($file->baseName . time()) . '.' . $file->extension;
             $image->byteSize = $file->size;
@@ -395,5 +395,14 @@ class ImgManager extends Component
     {
         $phpThumb = PhpThumbFactory::create($filePath, self::$_thumbOptions);
         return new ImgThumb($phpThumb);
+    }
+
+    public findImage($fk,$count){
+        $fkName = $this->fkName;
+        $image = Image::findOne([$fkName => $fk]);
+        if($empty($image)){
+            $image = new Image;
+        }
+        return $image;
     }
 }
