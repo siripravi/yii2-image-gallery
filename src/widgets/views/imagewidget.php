@@ -47,7 +47,7 @@ $count = count($images);
                 </div>
                 <?= Html::img($images[$i]['imageSrc'], ['alt' => "", 'id' => 'pimg-' . ($i + 1), 'class' => 'card-img img-fullsize']); ?>
                 <div class="caption">
-                    <p class="flex-text text-center"><?= $images[$i]['filename'];  ?></p>
+                    <p class="flex-text text-center"><!--= $images[$i]['filename'];  ?--></p>
                 </div>
             </div>
         </div>
