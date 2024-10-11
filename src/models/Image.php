@@ -84,4 +84,19 @@ class Image extends \yii\db\ActiveRecord
 
         ];
     }
+     /**
+     * @inheritdoc
+     */
+    public function afterDelete()
+    {
+        /*$path = Yii::$app->params['uploads_path'] . '/' . $this->dir . '/';
+
+        $filename = $path . $this->hash . '.' . $this->extension;
+
+        if (file_exists($filename)) {
+            unlink($filename);
+        }*/
+        \Yii::$app->gallery->delete($this->id)
+        parent::afterDelete();
+    }
 }
