@@ -20,7 +20,7 @@ class ImageWidget extends Widget
     {
         parent::init();
         $this->imageData = array($this->imageMaxCount);
-        $this->uploadUrl = Url::to(['gallery/default/upload-photo', 'fk' => $this->key]);
+        $this->uploadUrl = Url::to(['/gallery/default/upload-photo', 'fk' => $this->key]);
     }
     public function getImages()
     {
@@ -39,7 +39,7 @@ class ImageWidget extends Widget
                 'createTime' => 'created',
                 'imageSrc' => function ($image) {
                     $thumbVer = Yii::$app->gallery->thumbVer;
-                    return Url::to(['gallery/default/create', 'id' => $image->id, 'version' => $thumbVer]);
+                    return Url::to(['/gallery/default/create', 'id' => $image->id, 'version' => $thumbVer]);
                 },
             ],
         ]);
