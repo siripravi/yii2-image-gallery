@@ -40,15 +40,13 @@ $count = count($images);
 
     ?>
         <div class="col mt-4">
-            <div class="card h-200" style="height:229px;">
+        <div class="card" style="width:500px">
                 <div class="tools-edit-image">
                     <a id="<?= $images[$i]['id'];  ?>" title="Remove this picture" class="delete">X
                     </a>
                 </div>
-                <?= Html::img($images[$i]['imageSrc'], ['alt' => "", 'id' => 'pimg-' . ($i + 1), 'class' => 'card-img img-fullsize']); ?>
-                <div class="caption">
-                    <p class="flex-text text-center"><!--= $images[$i]['filename'];  ?--></p>
-                </div>
+                <?= Html::img($images[$i]['imageSrc'], ['alt' => "", 'id' => 'pimg-' . ($i + 1), 'class' => 'card-img-top img-fullsize']); ?>
+              
             </div>
         </div>
     <?php $i++;
