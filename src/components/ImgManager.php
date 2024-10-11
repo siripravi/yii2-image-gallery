@@ -116,7 +116,9 @@ class ImgManager extends Component
      */
     public function save($file, $fk = null, $path = null, $id = null,$count)
     {
+        $fkName = $this->fkName;
         $trx = \Yii::$app->db->beginTransaction();
+
         try {
            
             if ($id > 0) {
@@ -125,7 +127,7 @@ class ImgManager extends Component
             } else
                 $image = new Image();
             if($count == 1){
-                $image = Image::findOne(['{$this->fkName}' => $fk]);
+                $image = Image::findOne([$fkName => $fk]);
             }
             $image->extension = strtolower($file->extension);
             $image->filename =  md5($file->baseName . time()) . '.' . $file->extension;
