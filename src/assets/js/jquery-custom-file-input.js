@@ -12,8 +12,8 @@ jQuery.fn.file = function () {
       file.css({
         top: pos.top,
         left: pos.left,
-        width: btn.width(),
-        height: btn.height(),
+        width: btn.width() + 15,
+        height: btn.height() + 15,
       });
     }
 
