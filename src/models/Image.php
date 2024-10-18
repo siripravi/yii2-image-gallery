@@ -3,17 +3,25 @@
 namespace siripravi\gallery\models;
 
 use Yii;
-
+use yii\helpers\Inflector;
+use yii\behaviors\SluggableBehavior;
+use yii\behaviors\TimestampBehavior;
+use app\models\User;
 /**
  * This is the model class for table "image".
  *
  * @property int $id
  * @property string $fk_id
+ * @property string $slug
+ * @property string $path
+ * @property string $name
  * @property string $extension
  * @property string $filename
  * @property int $byteSize
  * @property string $mimeType
- * @property string $created
+ * @property string $created_by
+ * @property string $updated_at
+ * @property string $updated_at
  */
 class Image extends \yii\db\ActiveRecord
 {
@@ -25,7 +33,21 @@ class Image extends \yii\db\ActiveRecord
     {
         return \Yii::$app->gallery->imgTable;  //'{{%image}}';
     }
-
+    /**
+     * @inheritdoc
+     */
+    public function behaviors()
+    {
+        $behaviors = parent::behaviors();
+        $behaviors[] = [
+            TimestampBehavior::class,
+        ],
+        $behaviors[] = [
+            'class'     => SluggableBehavior::class,
+            'value' => [$this, 'getSlug'] //https://github.com/yiisoft/yii2/issues/7773
+        ];
+        return $behaviors;
+    }
     /**
      * {@inheritdoc}
      */
@@ -34,9 +56,10 @@ class Image extends \yii\db\ActiveRecord
         $fkName = \Yii::$app->gallery->fkName;
         return [
             [['extension', 'filename', 'byteSize', 'mimeType'], 'required'],
-            [['byteSize'], 'integer'],
-            [['created', $fkName, 'imageSrc'], 'safe'],
-            [['extension', 'filename', 'mimeType'], 'string', 'max' => 255],
+            [['byteSize', 'created_by'], 'integer'],
+            [['created_at', 'updated_at', $fkName, 'imageSrc', 'path'], 'safe'],
+            [['extension', 'filename', 'mimeType', 'path'], 'string', 'max' => 255],
+            [['created_by'], 'exist', 'skipOnError' => true, 'targetClass' => User::class, 'targetAttribute' => ['created_by' => 'id']],
         ];
     }
 
@@ -68,6 +91,19 @@ class Image extends \yii\db\ActiveRecord
     {
         $this->path = $path;
     }
+
+    /**
+     * @param $event
+     * @return string
+     * //https://github.com/yiisoft/yii2/issues/7773
+     */
+    public function getSlug($event)
+    {
+        if (!empty($event->sender->slug)) {
+            return $event->sender->slug;
+        }
+        return Inflector::slug($event->sender->stor->name);
+    }
     /**
      * {@inheritdoc}
      */
@@ -76,15 +112,18 @@ class Image extends \yii\db\ActiveRecord
         return [
             'id' => 'ID',
             'fk_id' => 'Fk',
+            'path' => 'path',
             'extension' => 'Extension',
             'filename' => 'Filename',
             'byteSize' => 'Byte Size',
             'mimeType' => 'Mime Type',
-            'created' => 'Created',
+            'created_at' => 'create time',
+            'updated_at' => 'update time',
+            'created_by' => 'create user'
 
         ];
     }
-     /**
+    /**
      * @inheritdoc
      */
     public function afterDelete()

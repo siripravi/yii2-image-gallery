@@ -6,7 +6,7 @@ $(function () {
     $("#load").fadeIn();
     var id = $(this).attr("id");
     var string = "id=" + id;
-    var commentContainer = $("#img-" + id);
+    var imageContainer = $("#img-" + id);
     var pic_id;
     $.ajax({
       type: "POST",
@@ -14,11 +14,10 @@ $(function () {
       data: string,
       cache: false,
       success: function () {
-        commentContainer.hide();
+        imageContainer.hide();
         $("#ximg-" + id).show();
         $("#" + id).hide();
-        $.pjax.reload({ container: "#gallery", async: false });
-        //  window.location.reload() ;
+        $.pjax.reload({ container: "#gallery", async: false });        
       },
     });
     return false;

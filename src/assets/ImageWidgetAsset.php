@@ -12,18 +12,13 @@ class ImageWidgetAsset extends AssetBundle
         'js/jquery-custom-file-input.js'
     ];
 
-    public $css = [
-        // '//maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css',      
-        'css/image-select.css',
-       // 'css/imagewidget.css',
-        // 'css/olx.css'
+    public $css = [       
+        'css/image-select.css',       
     ];
 
     public $depends = [
         'yii\web\JqueryAsset'
     ];
-
-
     public function init()
     {
         $this->sourcePath = __DIR__;

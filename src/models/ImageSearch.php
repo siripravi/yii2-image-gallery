@@ -31,7 +31,7 @@ class ImageSearch extends Image
             ],
             [
                 [
-                    'id', $fkName, 'path', 'extension', 'filename', 'byteSize', 'mimeType', 'created'
+                    'id', $fkName, 'path', 'extension', 'filename', 'byteSize', 'mimeType', 'created_at'
                 ],
                 'safe'
             ],
@@ -43,7 +43,7 @@ class ImageSearch extends Image
             ],
 
             [
-                [$fkName, 'path', 'extension', 'filename', 'mimeType', 'created'],
+                [$fkName, 'path', 'extension', 'filename', 'mimeType', 'created_at'],
                 'string',
                 'max' => 255,
             ],
@@ -74,7 +74,7 @@ class ImageSearch extends Image
             'filename' => $this->filename,
             'byteSize' => $this->byteSize,
             'mimeType' => $this->mimeType,
-            'created' => $this->created,
+            'created_at' => $this->created_at,
 
         ]);
 
