@@ -6,7 +6,6 @@ jQuery.fn.file = function () {
   return this.each(function () {
     var btn = $(this);
     var pos = btn.offset();
-
     function update() {
       pos = btn.offset();
       file.css({

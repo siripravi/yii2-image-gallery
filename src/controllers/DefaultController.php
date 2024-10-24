@@ -25,7 +25,7 @@ class DefaultController extends Controller
      * Creates and renders a new version of a specific image.
      * @param integer $id the image id.
      * @param string $version the name of the image version.
-     * @throws CHttpException if the requested version is not defined.
+     * @throws yii\web\HttpException if the requested version is not defined.
      */
     public function actionCreate($id, $version)
     {
@@ -65,12 +65,12 @@ class DefaultController extends Controller
             die;
         }
     }
-    public function actionUploadPhoto($fk,$count)
+    public function actionUploadPhoto($fk, $count)
     {
         //$imid = $_GET['fk'];
         $img = UploadedFile::getInstanceByName('file');
-       
-        $savedImage = \Yii::$app->gallery->save($img, $fk, '', '',$count);
+
+        $savedImage = \Yii::$app->gallery->save($img, $fk, '', '', $count);
         \Yii::debug('here');
         !empty($savedImage) ? $mid = $savedImage->id : '';
         $mid = $savedImage->id;

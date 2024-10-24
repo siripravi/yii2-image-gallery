@@ -17,7 +17,7 @@ $(function () {
         imageContainer.hide();
         $("#ximg-" + id).show();
         $("#" + id).hide();
-        $.pjax.reload({ container: "#gallery", async: false });        
+        $.pjax.reload({ container: "#gallery", async: false });
       },
     });
     return false;

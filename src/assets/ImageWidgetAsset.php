@@ -1,7 +1,5 @@
 <?php
-
 namespace siripravi\gallery\assets;
-
 use yii\web\AssetBundle;
 
 class ImageWidgetAsset extends AssetBundle
@@ -12,8 +10,8 @@ class ImageWidgetAsset extends AssetBundle
         'js/jquery-custom-file-input.js'
     ];
 
-    public $css = [       
-        'css/image-select.css',       
+    public $css = [
+        'css/image-select.css',
     ];
 
     public $depends = [

@@ -41,7 +41,7 @@ class Image extends \yii\db\ActiveRecord
         $behaviors = parent::behaviors();
         $behaviors[] = [
             TimestampBehavior::class,
-        ],
+        ];
         $behaviors[] = [
             'class'     => SluggableBehavior::class,
             'value' => [$this, 'getSlug'] //https://github.com/yiisoft/yii2/issues/7773
