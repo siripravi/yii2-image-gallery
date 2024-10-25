@@ -12,7 +12,7 @@ use yii\data\ActiveDataProvider;
  */
 class ImageSearch extends Image
 {
-
+    public $all;
     /**
      * @inheritdoc
      */

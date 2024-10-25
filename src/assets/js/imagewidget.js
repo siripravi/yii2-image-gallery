@@ -33,9 +33,7 @@ $(function () {
           var theId = $(".image_select form");
           var queryString = $.param(formData);
           var formElement = formData[1]["pict"];
-          pic_id = formElement;
-          console.log("Form Data Q:" + JSON.stringify(formData));
-          console.log("Pic Id :" + formData[1]["value"]);
+          pic_id = formElement;        
           return true;
         },
         success: function (responseText) {
@@ -49,7 +47,6 @@ $(function () {
               $(e.target).click(function () {
                 $(this).hide();
               });
-
               span.html(e.target);
               img.closest("span").append(btn);
               $("#add-file-" + pic_id).append(span);
@@ -62,11 +59,9 @@ $(function () {
                 responseText.toString() +
                 "&version=small&key=" +
                 new Date().getTime()
-            );
-          console.log("responseText" + responseText);
-          $.pjax.reload({ container: "#gallery", async: false });
-          //   window.location.reload();
+            );        
+          $.pjax.reload({ container: "#gallery", async: false });        
         },
-      }); //ajaxSubmit
+      });
     });
 });

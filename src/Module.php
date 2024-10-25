@@ -24,8 +24,9 @@ class Module extends \yii\base\Module
                 'class' => 'siripravi\gallery\components\ImgManager',
                 'fkName' => 'fk_id',
                 'imgTable' => '{{%image}}',
+                'imagePath' => 'uploads',
                 'thumbVer'  => 'small',
-                'imagePath' => '@webroot/files/images/',
+                //'imagePath' => '@webroot/files/images/',
                 'versions' => [
                     'small' => ['width' => 72, 'height' => 72],
                     'medium' => ['width' => 200, 'height' => 150],

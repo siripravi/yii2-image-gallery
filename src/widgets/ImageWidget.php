@@ -5,6 +5,7 @@ namespace siripravi\gallery\widgets;
 use yii;
 use siripravi\gallery\assets\ImageWidgetAsset;
 use siripravi\gallery\models\Image;
+use siripravi\gallery\models\ImageSearch;
 use yii\base\Widget;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Url;
@@ -12,29 +13,28 @@ use yii\helpers\Url;
 class ImageWidget extends Widget
 {
     public $key;
-    public $imageMaxCount = 10;
+    public $multiple = false;
     private $imageData;
     public $uploadUrl;
 
     public function init()
     {
         parent::init();
-        $this->imageData = array($this->imageMaxCount);
-        $this->uploadUrl = Url::to(['/gallery/default/upload-photo', 'fk' => $this->key,'count'=>$this->imageMaxCount]);
+       
+        $this->imageData = array();
+        $this->uploadUrl = Url::to(['/gallery/default/upload-photo']);
     }
     public function getImages()
     {
-        $fkName = Yii::$app->gallery->fkName;  // 'fk_id'
+        $reference = Yii::$app->gallery->getSessionUploadKey();
+        $fkName = Yii::$app->gallery->fkName;
         $imgTable = Yii::$app->gallery->imgTable;
-        $sql = "SELECT
-        id, " . $fkName . ", filename                       
-        FROM " . $imgTable . "
-        where " . $fkName . " = " . $this->key;
-        $images = Image::findBySql($sql)->all();
+        $images = Image::find(['reference' => $reference])->all();
         $data = ArrayHelper::toArray($images, [
             'siripravi\gallery\models\Image' => [
                 'id',
                 $fkName,
+                'reference',
                 'filename',
                 'createTime' => 'created',
                 'imageSrc' => function ($image) {
@@ -49,9 +49,16 @@ class ImageWidget extends Widget
 
     public function run()
     {
+        $searchModel = new ImageSearch(['all' => Yii::$app->request->get('all')]);
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
         ImageWidgetAsset::register($this->getView());
-        $this->imageData = $this->getImages($this->key);
-        return $this->render('imagewidget', ['images' => $this->imageData, 'uploadUrl' => $this->uploadUrl]);
+        $this->imageData = $this->getImages();
+        return $this->render('imagewidget', [
+            'images' => $this->imageData,
+            'multiple' => $this->multiple,
+            'uploadUrl' => $this->uploadUrl,
+            'dataProvider' => $dataProvider
+        ]);
     }
     /* public function getViewPath()
     {

@@ -6,7 +6,7 @@ use yii;
 use yii\base\Component;
 use siripravi\gallery\models\Image;
 use siripravi\gallery\components\ImgException;
-
+use ParagonIE\ConstantTime\Encoding;
 use yii\db\Expression;
 use yii\imagine;
 use Imagick;
@@ -35,21 +35,9 @@ class ImgManager extends Component
     public $imgTable;   //{{%image}}
 
     public $thumbVer;
+    public $imageUploadSessionKey = 'image_select_upload';
+    public $multiUpload = false;
     /**
-     * PhpThumb options that are passed to the ThumbFactory.
-     * Default values are the following:
-     *
-     * <code>
-     * array(
-     *     'resizeUp' => false,
-     *     'jpegQuality' => 100,
-     *     'correctPermissions' => false,
-     *     'preserveAlpha' => true,
-     *     'alphaMaskColor'	=> array(255, 255, 255),
-     *     'preserveTransparency' => true,
-     *     'transparencyMaskColor' => array(0, 0, 0),
-     * );
-     * </code>
      *
      * @property array
      */
@@ -114,26 +102,26 @@ class ImgManager extends Component
      * @return Image the image record.
      * @throws ImageException if saving the image record or file fails.
      */
-    public function save($file, $fk = null, $path = null, $id = null, $count)
+    public function save($file, $reference, $path = null)
     {
 
         $trx = \Yii::$app->db->beginTransaction();
 
         try {
-
-            if ($id > 0) {
+           /* if ($id > 0) {
                 $image = Image::findOne($id);
                 $this->delete($id);
-            }
+            }*/
 
-            $image = $this->findImage($fk, $count); //Image::findOne([$fkName => $fk]);
+            $image = new Image();  //$this->findImage($reference, $count); //Image::findOne([$fkName => $fk]);
 
 
             $image->extension = strtolower($file->extension);
             $image->filename =  md5($file->baseName . time()) . '.' . $file->extension;
             $image->byteSize = $file->size;
             $image->mimeType = $file->type;
-            $image->{$this->fkName} = $fk;
+            $image->reference = $reference;
+            //  $image->{$this->fkName} = $fk;
             if ($path !== null)
                 $image->path = trim($path, DIRECTORY_SEPARATOR);
             if ($image->save() === false) {
@@ -149,6 +137,57 @@ class ImgManager extends Component
             $path .= $this->resolveFileName($image);
 
             if ($file->saveAs($path) === false)
+                throw new ImgException(Img::t('error', 'Failed to save image! File could not be saved.'));
+
+            $trx->commit();
+            return $image;
+        } catch (CException $e) {
+            $trx->rollback();
+            throw $e;
+        }
+    }
+
+    public function update($file, $reference,$path='')
+    {
+        $trx = \Yii::$app->db->beginTransaction();
+
+        try {
+                      
+            $image = $this->loadImage($reference);
+          
+            //Remove Image versions existing
+            if ($image instanceof Image && ($image->id > 0)) {
+                $path1 = $this->resolveImagePath($image) . $this->resolveFileName($image);    
+                if (file_exists($path1) !== false && unlink($path1) === false)
+                    throw new ImgException(Img::t('error', 'Failed to delete image! File could not be deleted.'));    
+                foreach ($this->versions as $version => $config) {
+                   
+                    $this->deleteVersion($image, $version);
+                }
+                $path1 = "";
+            }
+
+            //Update the current record with new image 
+            $image->extension = strtolower($file->extension);
+            $image->filename =  md5($file->baseName . time()) . '.' . $file->extension;
+            $image->byteSize = $file->size;
+            $image->mimeType = $file->type;
+            $image->reference = $reference;
+            //  $image->{$this->fkName} = $fk;
+            if ($path !== null)
+                $image->path = trim($path, DIRECTORY_SEPARATOR);
+            if ($image->save() === false) {
+            }
+          
+            $path1 = $this->resolveImagePath($image);
+
+            if (!file_exists($path1))
+                if (!$this->createDirectory($path1))
+                    throw new ImgException(Img::t('error', 'Failed to save image! Directory could not be created.'));
+
+            $path1 .= $this->resolveFileName($image);
+
+            if ($file->saveAs($path1) === false)
                 throw new ImgException(Img::t('error', 'Failed to save image! File could not be saved.'));
 
             $trx->commit();
@@ -179,9 +218,7 @@ class ImgManager extends Component
                     if (!$this->createDirectory($path))
                         throw new ImgException(Img::t('error', 'Failed to create version! Directory could not be created.'));
 
-                $thumbPath = $path . DIRECTORY_SEPARATOR . $fileName;
-
-                //Picture::getImagine()->open($this->_basePath . 'web\files\images\\' . $fileName)->thumbnail(new Box($options->width, $options->height))->save($path, ['quality' => 90]);
+                $thumbPath = $path . DIRECTORY_SEPARATOR . $fileName;              
                 Picture::getImagine()->open($imagePath . DIRECTORY_SEPARATOR . $fileName)->thumbnail(new Box($options->width, $options->height))->save($thumbPath, ['quality' => 90]);
                 return $thumbPath;
             } else
@@ -205,16 +242,16 @@ class ImgManager extends Component
         if ($image instanceof Image) {
             $path = $this->resolveImagePath($image) . $this->resolveFileName($image);
 
-            if ($image->delete() === false)
-                throw new ImgException(Img::t('error', 'Failed to delete image! Record could not be deleted.'));
-
             if (file_exists($path) !== false && unlink($path) === false)
                 throw new ImgException(Img::t('error', 'Failed to delete image! File could not be deleted.'));
 
-            foreach ($this->versions as $version => $config)
+            foreach ($this->versions as $version => $config) {              
                 $this->deleteVersion($image, $version);
-        } else
-            throw new ImgException(Img::t('error', 'Failed to delete image! Record could not be found.'));
+            }
+        }
+        if ($image->delete())        
+                return true;
+        return false;    
     }
 
     /**
@@ -227,7 +264,7 @@ class ImgManager extends Component
     protected function deleteVersion($image, $version)
     {
         if (isset($this->versions[$version])) {
-            $path = $this->resolveImageVersionPath($image, $version) . $this->resolveFileName($image);
+            $path = $this->resolveImageVersionPath($image, $version) . DIRECTORY_SEPARATOR . $this->resolveFileName($image);
 
             if (file_exists($path) !== false && unlink($path) === false)
                 throw new ImgException(Img::t('error', 'Failed to delete the image version! File could not be deleted.'));
@@ -397,13 +434,33 @@ class ImgManager extends Component
         return new ImgThumb($phpThumb);
     }
 
-    public function findImage($fk, $count)
+    public function loadImage($reference)
     {
-        $fkName = $this->fkName;
-        $image = Image::findOne([$fkName => $fk]);
+        $image = Image::findOne(['reference' => $reference]);
         if (empty($image)) {
             $image = new Image;
         }
         return $image;
+    }
+    public function setMultiUpload($mu)
+    {
+        $this->multiUpload = $mu ? true : false;
+    }
+    public function getMultiUpload()
+    {
+        return $this->multiUpload;
+    }
+
+    public function getSessionUploadKey()
+    {
+        $keyName = $this->imageUploadSessionKey;
+        $session =  \Yii::$app->session;
+        if (isset($session[$keyName])) {
+            $keyValue = $session[$keyName];
+        } else {
+            $data = random_bytes(16);
+            $keyValue = $session[$keyName] = Encoding::hexEncodeUpper($data);
+        }
+        return $keyValue;
     }
 }

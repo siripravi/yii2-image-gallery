@@ -12,6 +12,7 @@ use app\models\User;
  *
  * @property int $id
  * @property string $fk_id
+ * @property string $reference
  * @property string $slug
  * @property string $path
  * @property string $name
@@ -26,6 +27,8 @@ use app\models\User;
 class Image extends \yii\db\ActiveRecord
 {
     public $imageSrc;
+
+    
     /**
      * {@inheritdoc}
      */
@@ -40,7 +43,7 @@ class Image extends \yii\db\ActiveRecord
     {
         $behaviors = parent::behaviors();
         $behaviors[] = [
-            TimestampBehavior::class,
+            'class' => TimestampBehavior::class,
         ];
         $behaviors[] = [
             'class'     => SluggableBehavior::class,
@@ -57,9 +60,9 @@ class Image extends \yii\db\ActiveRecord
         return [
             [['extension', 'filename', 'byteSize', 'mimeType'], 'required'],
             [['byteSize', 'created_by'], 'integer'],
-            [['created_at', 'updated_at', $fkName, 'imageSrc', 'path'], 'safe'],
+            [['created_at', 'updated_at', $fkName, 'imageSrc', 'path','reference'], 'safe'],
             [['extension', 'filename', 'mimeType', 'path'], 'string', 'max' => 255],
-            [['created_by'], 'exist', 'skipOnError' => true, 'targetClass' => User::class, 'targetAttribute' => ['created_by' => 'id']],
+          //  [['created_by'], 'exist', 'skipOnError' => true, 'targetClass' => Yii::$app->gallery->userClass::class, 'targetAttribute' => ['created_by' => Yii::$app->user->userPk]],
         ];
     }
 
@@ -102,7 +105,7 @@ class Image extends \yii\db\ActiveRecord
         if (!empty($event->sender->slug)) {
             return $event->sender->slug;
         }
-        return Inflector::slug($event->sender->stor->name);
+        return Inflector::slug($event->sender->name);
     }
     /**
      * {@inheritdoc}
@@ -112,6 +115,7 @@ class Image extends \yii\db\ActiveRecord
         return [
             'id' => 'ID',
             'fk_id' => 'Fk',
+            'slug'  => 'slug',
             'path' => 'path',
             'extension' => 'Extension',
             'filename' => 'Filename',
@@ -126,7 +130,7 @@ class Image extends \yii\db\ActiveRecord
     /**
      * @inheritdoc
      */
-    public function afterDelete()
+   /* public function afterDelete()
     {
         /*$path = Yii::$app->params['uploads_path'] . '/' . $this->dir . '/';
 
@@ -135,7 +139,7 @@ class Image extends \yii\db\ActiveRecord
         if (file_exists($filename)) {
             unlink($filename);
         }*/
-        \Yii::$app->gallery->delete($this->id);
-        parent::afterDelete();
-    }
+       // \Yii::$app->gallery->delete($this->id);
+      //  parent::afterDelete();
+    //}
 }

@@ -2,11 +2,11 @@
 
 namespace siripravi\gallery\controllers;
 
+use yii;
 use yii\web\Controller;
-use yii\helpers\Html;
-use siripravi\gallery\models\Image;
 use yii\web\UploadedFile;
-use yii\data\ActiveDataProvider;
+use siripravi\gallery\models\Image;
+
 
 /**
  * Default controller for the `image` module
@@ -39,7 +39,6 @@ class DefaultController extends Controller
 
     public function getImage($imagePath)
     {
-
         $fileInfo = finfo_open(FILEINFO_MIME_TYPE);
         $contentType = finfo_file($fileInfo, $imagePath);
         finfo_close($fileInfo);
@@ -53,33 +52,28 @@ class DefaultController extends Controller
         fpassthru($fp);
     }
 
-    public function actionRemoveImage()
+    public function actionRemoveImage($id)
     {
-        $id = isset($_POST['id']) ? $_POST['id'] : '';
-        //$arr = CJSON::decode($str);
-        //$id =  $arr['id'];//Yii::app()->end();
+        $id = isset($_POST['id']) ? $_POST['id'] : $id;
         if (\Yii::$app->gallery->delete($id))
-            echo 'removed';
+            return $this->redirect(Yii::$app->request->referrer ?: Yii::$app->homeUrl);
         else {
             echo 'not removed';
             die;
         }
     }
-    public function actionUploadPhoto($fk, $count)
+    public function actionUploadPhoto($multiple)
     {
-        //$imid = $_GET['fk'];
         $img = UploadedFile::getInstanceByName('file');
+        $reference = Yii::$app->gallery->getSessionUploadKey();
+        $savedImage = new Image();
+        if ($multiple) {
+            $savedImage = \Yii::$app->gallery->save($img, $reference);
+        } else {
+            $savedImage = \Yii::$app->gallery->update($img, $reference);
+        }
+        // if($savedImage instanceof Image)  return $savedImage->id;
 
-        $savedImage = \Yii::$app->gallery->save($img, $fk, '', '', $count);
-        \Yii::debug('here');
-        !empty($savedImage) ? $mid = $savedImage->id : '';
-        $mid = $savedImage->id;
-        $this->images[] = $fk;
-        $session =  \Yii::$app->session;
-        $session['images'] = $this->images;
-        if (!empty($fk))
-            echo $mid;
-        else
-            echo 'removed';
+        return $savedImage->id;
     }
 }
