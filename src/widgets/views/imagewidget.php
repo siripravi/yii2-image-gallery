@@ -40,19 +40,16 @@ $count = count($images);
     </div>
 
     <?php Pjax::begin(['id' => 'gallery']) ?>
-
-    <div class="d-grid d-md-flex">
-        <p class="lh-lg">Click to Upload Logo!</p>  
-        <p>
-            
-        </p>      
+<?php if($count == 0):?>
+    <div class="card bg-transparent" style="width:18rem;">
+    <span class="placeholder col-12 placeholder-lg"></span>
     </div>
-
+<?php endif;?>
     <?= ListView::widget([
        
         'dataProvider' => $dataProvider,
         'options' => [
-            'class' => 'row gx-5'
+            'class' => 'row gx-15'
         ],
       
         'pager' => [
