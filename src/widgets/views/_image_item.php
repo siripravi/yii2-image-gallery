@@ -10,7 +10,7 @@ use yii\helpers\Html;
 $thumbVer = Yii::$app->gallery->thumbVer;
 $modelSrc =  Url::to(['/gallery/default/create', 'id' => $model->id, 'version' => $thumbVer]);
 ?>
-<div class="card" style="width: 18rem;">
+<div class="card bg-transparent" style="width: 18rem;">
     <div class="card-thumbnail">
         <?php if ($model) { ?>
             <img src="<?= $modelSrc; ?>" alt="<?= $model->extension ? $model->extension : $model->slug ?>" title="<?= $model->filename ?>" class="card-img rounded-circle">
