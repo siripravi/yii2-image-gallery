@@ -41,7 +41,7 @@ class DefaultController extends Controller
     {   $response = \Yii::$app->response;
         $contentType = finfo_file($fileInfo, $imagePath);
         $response->format = yii\web\Response::FORMAT_RAW;
-        $response->headers->add('content-type', 'image/jpg');
+        $response->headers->add('content-type', $contentType);
         $response->headers->add('content-length', filesize($imagePath));
         $img_data = file_get_contents($imagePath);
         $response->data = $img_data;
