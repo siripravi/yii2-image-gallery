@@ -39,6 +39,7 @@ class DefaultController extends Controller
 
     public function getImage($imagePath)
     {   $response = \Yii::$app->response;
+        $fileInfo = finfo_open(FILEINFO_MIME_TYPE);
         $contentType = finfo_file($fileInfo, $imagePath);
         $response->format = yii\web\Response::FORMAT_RAW;
         $response->headers->add('content-type', $contentType);
