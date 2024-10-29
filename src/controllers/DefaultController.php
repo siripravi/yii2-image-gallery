@@ -38,18 +38,23 @@ class DefaultController extends Controller
     }
 
     public function getImage($imagePath)
-    {
-        $fileInfo = finfo_open(FILEINFO_MIME_TYPE);
+    {   $response = \Yii::$app->response;
         $contentType = finfo_file($fileInfo, $imagePath);
+        $response->format = yii\web\Response::FORMAT_RAW;
+        $response->headers->add('content-type', 'image/jpg');
+        $response->headers->add('content-length', filesize($imagePath));
+        $img_data = file_get_contents($imagePath);
+        $response->data = $img_data;
+        return $response;
+        /*$fileInfo = finfo_open(FILEINFO_MIME_TYPE);
+       
         finfo_close($fileInfo);
-
         $fp = fopen($imagePath, 'r');
-
+        ob_end_clean();
         header("Content-Type: " . $contentType);
         header("Content-Length: " . filesize($imagePath));
-
-        ob_end_clean();
-        fpassthru($fp);
+       
+        fpassthru($fp);*/
     }
 
     public function actionRemoveImage($id)
