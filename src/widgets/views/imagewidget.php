@@ -20,51 +20,50 @@ $count = count($images);
             <span><i class="fa fa-solid fa-pen"></i></span>
             <span id="image-select-add-<?php echo ($count + 1); ?>" class=""></span>
             <?php
-            $form = ActiveForm::begin([
-                'id' => 'frm_img_select' . $count,
-                'action' => Url::to(['/gallery/default/upload-photo','multiple' => $multiple]),
-                'options' => [
-                    'class' => 'form-horizontal',
-                    'enctype' => 'multipart/form-data',
-                    'data-bs-html' => "true",
-                    'data-bs-custom-class' => "custom-tooltip",
-                    'data-bs-toggle' => "tooltip",
-                    'title' => "Click to change the Logo"
-                ],
-            ])
+                $form = ActiveForm::begin([
+                    'id' => 'frm_img_select' . $count,
+                    'action' => Url::to(['/gallery/default/upload-photo','multiple' => $multiple]),
+                    'options' => [
+                        'class' => 'form-horizontal',
+                        'enctype' => 'multipart/form-data',
+                        'data-bs-html' => "true",
+                        'data-bs-custom-class' => "custom-tooltip",
+                        'data-bs-toggle' => "tooltip",
+                        'title' => "Click to change the Logo"
+                    ],
+                ]);
             ?>
-            <input type="hidden" name="pict" value="<?php echo ($count + 1); ?>" />
-            
+            <input type="hidden" name="pict" value="<?php echo ($count + 1); ?>" />            
             <?php ActiveForm::end() ?>
         </a>
     </div>
 
     <?php Pjax::begin(['id' => 'gallery']) ?>
-<?php if($count == 0):?>
-    <div class="card bg-transparent" style="width:18rem;">
-    <span class="placeholder col-12 placeholder-lg"></span>
-    </div>
-<?php endif;?>
-    <?= ListView::widget([
-       
-        'dataProvider' => $dataProvider,
-        'options' => [
-            'class' => 'row gx-15'
-        ],
-      
-        'pager' => [
-            'class' => yii\bootstrap5\LinkPager::class,
-           
-        ],
-        'itemOptions' => [
-            'class' => 'col'
-        ],
+        <?php if($count == 0):?>
+            <div class="card bg-transparent" style="width:18rem;">
+            <span class="placeholder col-12 placeholder-lg"></span>
+            </div>
+        <?php endif;?>
+        <?= ListView::widget([
+        
+            'dataProvider' => $dataProvider,
+            'options' => [
+                'class' => 'row gx-15'
+            ],
+        
+            'pager' => [
+                'class' => yii\bootstrap5\LinkPager::class,
+            
+            ],
+            'itemOptions' => [
+                'class' => 'col'
+            ],
 
-        'layout' => '<div class="row p-3">{items}</div>',
-        'itemView' => '_image_item',
-        'viewParams' => ['multiple' =>$multiple]
-       
-    ]); ?>
+            'layout' => '<div class="row p-3">{items}</div>',
+            'itemView' => '_image_item',
+            'viewParams' => ['multiple' =>$multiple]
+        
+        ]); ?>
 
     <?php Pjax::end() ?>
 </div>
