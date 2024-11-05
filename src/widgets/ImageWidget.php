@@ -22,7 +22,7 @@ class ImageWidget extends Widget
         parent::init();
        
         $this->imageData = array();
-        $this->uploadUrl = Url::to(['/gallery/default/upload-photo']);
+       // $this->uploadUrl = Url::to(['/gallery/default/upload-photo']);
     }
     public function getImages()
     {
