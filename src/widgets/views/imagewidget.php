@@ -22,7 +22,7 @@ $count = count($images);
             <?php
                 $form = ActiveForm::begin([
                     'id' => 'frm_img_select' . $count,
-                    'action' => $this->uploadUrl,//Url::to(['/gallery/default/upload-photo','multiple' => $multiple]),
+                    'action' => $uploadUrl,//Url::to(['/gallery/default/upload-photo','multiple' => $multiple]),
                     'options' => [
                         'class' => 'form-horizontal',
                         'enctype' => 'multipart/form-data',
