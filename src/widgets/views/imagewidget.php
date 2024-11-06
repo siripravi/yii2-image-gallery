@@ -2,7 +2,7 @@
 
 use yii\widgets\ActiveForm;
 use yii\widgets\ListView;
-
+use yii\widgets\Pjax;
 use yii\helpers\Url;
 ?>
 <style type="text/css">
@@ -38,7 +38,7 @@ $count = count($images);
         </a>
     </div>
 
-   
+    <?php Pjax::begin(['id' => 'gallery']) ?>
         <?php if($count == 0):?>
             <div class="card bg-transparent" style="width:18rem;">
             <span class="placeholder col-12 placeholder-lg"></span>
@@ -65,5 +65,5 @@ $count = count($images);
         
         ]); ?>
 
-
+    <?php Pjax::end() ?>
 </div>
