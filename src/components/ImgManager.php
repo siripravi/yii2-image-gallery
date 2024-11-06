@@ -149,7 +149,7 @@ class ImgManager extends Component
         }
     }
 
-    public function update($file, $reference,,$fkId=null,$fkClass=null,$path='')
+    public function update($file, $reference,$fkId=null,$fkClass=null,$path='')
     {
         $trx = \Yii::$app->db->beginTransaction();
 
