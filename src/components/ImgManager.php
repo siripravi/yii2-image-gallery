@@ -155,7 +155,7 @@ class ImgManager extends Component
 
         try {
                       
-            $image = $this->loadImage($reference);
+            $image = $this->loadImage($reference,$fkId);
           
             //Remove Image versions existing
             if ($image instanceof Image && ($image->id > 0)) {
@@ -438,9 +438,13 @@ class ImgManager extends Component
         return new ImgThumb($phpThumb);
     }
 
-    public function loadImage($reference)
+    public function loadImage($reference,$fkId=null)
     {
-        $image = Image::findOne(['reference' => $reference]);
+        $qry = ['reference' => $reference];
+        if($fkId !== null){
+           $qry = ['fk_id'=>$fkId];
+        }
+        $image = Image::findOne($qry);
         if (empty($image)) {
             $image = new Image;
         }
