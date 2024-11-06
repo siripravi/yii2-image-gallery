@@ -28,8 +28,8 @@ class ImageWidget extends Widget
     {
         $reference = Yii::$app->gallery->getSessionUploadKey();
         $fkName = Yii::$app->gallery->fkName;
-        $fkClass = Yii::$app->gallery->fkClass;
-        $imgTable = Yii::$app->gallery->imgTable;
+       // $fkClass = Yii::$app->gallery->fkClass;
+      //  $imgTable = Yii::$app->gallery->imgTable;
         $images = Image::find(['reference' => $reference])->all();
         $data = ArrayHelper::toArray($images, [
             'siripravi\gallery\models\Image' => [
