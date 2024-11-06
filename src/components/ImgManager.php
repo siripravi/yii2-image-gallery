@@ -149,13 +149,13 @@ class ImgManager extends Component
         }
     }
 
-    public function update($file, $reference,$path='')
+    public function update($file, $reference,,$fkId=null,$fkClass=null,$path='')
     {
         $trx = \Yii::$app->db->beginTransaction();
 
         try {
                       
-            $image = $this->loadImage($reference,$fkId=null,$fkClass=null);
+            $image = $this->loadImage($reference);
           
             //Remove Image versions existing
             if ($image instanceof Image && ($image->id > 0)) {
