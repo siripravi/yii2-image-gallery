@@ -11,7 +11,8 @@ use app\models\User;
  * This is the model class for table "image".
  *
  * @property int $id
- * @property string $fk_id
+ * @property int $fk_id
+ * @property string $fk_class
  * @property string $reference
  * @property string $slug
  * @property string $path
@@ -59,9 +60,11 @@ class Image extends \yii\db\ActiveRecord
         $fkName = \Yii::$app->gallery->fkName;
         return [
             [['extension', 'filename', 'byteSize', 'mimeType'], 'required'],
-            [['byteSize', 'created_by'], 'integer'],
+            [['byteSize', 'created_by','fk_id'], 'integer'],
             [['created_at', 'updated_at', $fkName, 'imageSrc', 'path','reference'], 'safe'],
             [['extension', 'filename', 'mimeType', 'path'], 'string', 'max' => 255],
+            [['fk_class'],'string','max'=> 50]
+
           //  [['created_by'], 'exist', 'skipOnError' => true, 'targetClass' => Yii::$app->gallery->userClass::class, 'targetAttribute' => ['created_by' => Yii::$app->user->userPk]],
         ];
     }
@@ -142,4 +145,5 @@ class Image extends \yii\db\ActiveRecord
        // \Yii::$app->gallery->delete($this->id);
       //  parent::afterDelete();
     //}
+   
 }
