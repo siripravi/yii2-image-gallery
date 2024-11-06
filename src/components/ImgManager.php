@@ -155,7 +155,7 @@ class ImgManager extends Component
 
         try {
                       
-            $image = $this->loadImage($reference);
+            $image = $this->loadImage($reference,$fkId=null,$fkClass=null);
           
             //Remove Image versions existing
             if ($image instanceof Image && ($image->id > 0)) {
@@ -175,6 +175,8 @@ class ImgManager extends Component
             $image->byteSize = $file->size;
             $image->mimeType = $file->type;
             $image->reference = $reference;
+            $image->fk_id = $fkId;
+            $image->fk_class = $fkClass;
             //  $image->{$this->fkName} = $fk;
             if ($path !== null)
                 $image->path = trim($path, DIRECTORY_SEPARATOR);
