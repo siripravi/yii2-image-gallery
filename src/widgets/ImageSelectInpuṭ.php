@@ -5,6 +5,7 @@ namespace app\widgets;
 use yii\helpers\Html;
 use yii\web\View;
 use yii\widgets\InputWidget;
+use yii\bootstrap5\ActiveForm;
 use siripravi\gallery\assets\ImageWidgetAsset;
 use yii\base\ErrorException;
 
