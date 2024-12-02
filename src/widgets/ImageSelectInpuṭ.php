@@ -9,7 +9,7 @@ use yii\bootstrap5\ActiveForm;
 use siripravi\gallery\assets\ImageWidgetAsset;
 use yii\base\ErrorException;
 
-class ImageSelector extends InputWidget
+class ImageSelectInput extends InputWidget
 {
     /** @var string путь к Responsive File Manager */
     public $fileManagerPathTpl;
