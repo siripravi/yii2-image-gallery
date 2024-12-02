@@ -9,6 +9,7 @@ namespace app\widgets;
 
 use yii\helpers\Html;
 use yii\bootstrap5\InputWidget;
+use yii\bootstrap5\ActiveForm;
 use siripravi\gallery\assets\ImageWidgetAsset;
 
 /**
@@ -19,19 +20,11 @@ use siripravi\gallery\assets\ImageWidgetAsset;
 class ImageSelectInput extends InputWidget
 {
     
-    const MODE_24H = '24h';
-    const MODE_12H = '12h';
-     /**
-     * @var string
-     */
-    public $mode = self::MODE_24H;
+   
     public $key;
     public $imageMaxCount = 10;
     private $imageData;
     public $uploadUrl;
-
-    
-   
     
     /**
      * @var array
@@ -71,6 +64,9 @@ class ImageSelectInput extends InputWidget
         Html::addCssClass($containerOptions, 'input-group bootstrap-timepicker timepicker');
         
         return Html::tag('div', $input, $containerOptions);
+
+        
+          
     }
 
     protected funtionInitWidget(){

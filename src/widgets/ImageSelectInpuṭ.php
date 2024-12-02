@@ -12,8 +12,66 @@ class ImageSelector extends InputWidget
 {
     /** @var string путь к Responsive File Manager */
     public $fileManagerPathTpl;
-
+    public $clientOptions = ['mode' => 'inline','type' =>'text'];
+    public $remoteClientOptions = []; 
+    public $url = "/invoice/default/upload-logo";
+    public $multiple = false;
+    public function init()
+    {
+        // Manual setting element ID.
+        if ($this->id) {
+            $this->options['id'] = $this->id;
+        }
+        parent::init();
+    }
     public function run()
+    {
+        $this->registerPlugin('darkEditable');
+        
+        if ($this->label) {
+            $this->options['label'] = $this->label;
+        }
+       
+        $this->registerClientScript();
+        $input = '';
+        if ($this->hasModel()) {          
+            $input = Html::getAttributeValue($this->model, $this->attribute);
+          
+          /*  $input .= Html::a('Edit','#',[
+                'class' => 'link-primary ps-3 link-underline-opacity-25 link-underline-opacity-100-hover',
+                'id' => $this->getId(),
+                'data-name' => $this->attribute,
+                'data-value' => Html::getAttributeValue($this->model, $this->attribute),
+                              
+               'data-type'  => 'text',
+                'data-url' => $this->url,
+                'data-pk' => $this->model->primaryKey,
+                'data-title' => $this->title
+            ]);
+          */
+          $input .= '<div id="div_image_select_1" class="image_select">';
+          $input .= '<a id="btn_change_image_2" class="image-select-edit rel" data-toggle="tooltip" aria-label="click to choose a picture" data-bs-original-title="click to choose a picture">
+            <span><i class="fa fa-solid fa-pen"></i></span>';
+            $input .= ActiveForm::begin([
+                //  'id' => 'frm_img_select' . $count,
+                  'action' => Url::to(['/gallery/default/upload-photo','multiple' => $this->multiple]),
+                  'options' => [
+                      'class' => 'form-horizontal',
+                      'enctype' => 'multipart/form-data',
+                      'data-bs-html' => "true",
+                      'data-bs-custom-class' => "custom-tooltip",
+                      'data-bs-toggle' => "tooltip",
+                      'title' => "Click to change the Logo"
+                  ],
+              ]);
+              $input .=' <input type="hidden" name="pict" value="<?php echo ($count + 1); ?>" />';
+              $input .= ActiveForm::end();
+              $input .='</a></div>';
+        }         
+        return $input;
+    }
+ 
+    public function run1()
     {
         /*if (!$this->fileManagerPathTpl) {
 			throw new ErrorException('Specify fileManagerPathTpl in bootstrap.php for rahulabs\yii2\imgSelector\ImageSelector');
@@ -60,7 +118,7 @@ class ImageSelector extends InputWidget
         $this->registerClientScript();
     }
 
-    private function registerClientScript()
+  /*  private function registerClientScript()
     {
 
         $view = $this->getView();
@@ -71,5 +129,33 @@ class ImageSelector extends InputWidget
             $view->registerJs('$( document ).ready(function() { initImageSelectorPopups(); });', View::POS_READY);
         }
         ImageWidgetAsset::register($view);
+    }*/
+    protected function registerClientScript()
+    {
+        $clientOptions = array_merge($this->clientOptions, $this->remoteClientOptions());
+        $clientOptions = Json::encode($clientOptions);
+        $view = $this->getView();
+        $id = isset($this->options['id']) ? $this->options['id'] : $this->getId();
+
+        $view->registerJs("new DarkEditable($id,$clientOptions);");
+        
+        if ($this->clientEvents) {
+            $js = [];
+            foreach ($this->clientEvents as $event => $callback) {
+                if (!$callback instanceof JsExpression) {
+                    $callback = new JsExpression($callback);
+                }
+                $js[] = "jQuery('#$id').on('$event', $callback);";
+            }
+            if (!empty($js)) {
+                $js = implode("\n", $js);
+                $view->registerJs($js);
+            }
+        }
+        
+        $asset = ImageWidgetAsset::register($view);
+       /* if ($this->language) {
+            $asset->language = $this->language;
+        }*/
     }
 }
