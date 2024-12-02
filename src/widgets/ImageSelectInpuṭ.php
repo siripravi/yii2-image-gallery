@@ -1,6 +1,6 @@
 <?php
 
-namespace app\widgets;
+namespace siripravi\gallery\widgets;
 
 use yii\helpers\Html;
 use yii\web\View;
@@ -9,7 +9,7 @@ use yii\bootstrap5\ActiveForm;
 use siripravi\gallery\assets\ImageWidgetAsset;
 use yii\base\ErrorException;
 
-class ImageSelectInput extends InputWidget
+class ImageSelectInpuṭ extends InputWidget
 {
     /** @var string путь к Responsive File Manager */
     public $fileManagerPathTpl;
