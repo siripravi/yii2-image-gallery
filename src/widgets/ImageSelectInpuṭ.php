@@ -1,22 +1,26 @@
 <?php
 
 namespace siripravi\gallery\widgets;
-
+use yii;
 use yii\helpers\Html;
+use yii\helpers\Url;
 use yii\web\View;
 use yii\widgets\InputWidget;
 use yii\bootstrap5\ActiveForm;
 use siripravi\gallery\assets\ImageWidgetAsset;
+use siripravi\gallery\models\Image;
 use yii\base\ErrorException;
-
+use yii\helpers\Json;
 class ImageSelectInpuṭ extends InputWidget
 {
-    /** @var string путь к Responsive File Manager */
-    public $fileManagerPathTpl;
-    public $clientOptions = ['mode' => 'inline','type' =>'text'];
+      
     public $remoteClientOptions = []; 
-    public $url = "/invoice/default/upload-logo";
+    public $url = "/gallery/default/";
     public $multiple = false;
+    public $clientEvents = [];
+  public $remote;
+  
+    public $label = 'upload';
     public function init()
     {
         // Manual setting element ID.
@@ -25,120 +29,119 @@ class ImageSelectInpuṭ extends InputWidget
         }
         parent::init();
     }
+  
     public function run()
     {
-        $this->registerPlugin('darkEditable');
-        
-        if ($this->label) {
-            $this->options['label'] = $this->label;
-        }
-       
         $this->registerClientScript();
-        $input = '';
-        if ($this->hasModel()) {          
-            $input = Html::getAttributeValue($this->model, $this->attribute);
-          
-          /*  $input .= Html::a('Edit','#',[
-                'class' => 'link-primary ps-3 link-underline-opacity-25 link-underline-opacity-100-hover',
-                'id' => $this->getId(),
-                'data-name' => $this->attribute,
-                'data-value' => Html::getAttributeValue($this->model, $this->attribute),
-                              
-               'data-type'  => 'text',
-                'data-url' => $this->url,
-                'data-pk' => $this->model->primaryKey,
-                'data-title' => $this->title
-            ]);
-          */
-          $input .= '<div id="div_image_select_1" class="image_select">';
-          $input .= '<a id="btn_change_image_2" class="image-select-edit rel" data-toggle="tooltip" aria-label="click to choose a picture" data-bs-original-title="click to choose a picture">
-            <span><i class="fa fa-solid fa-pen"></i></span>';
-            $input .= ActiveForm::begin([
-                //  'id' => 'frm_img_select' . $count,
-                  'action' => Url::to(['/gallery/default/upload-photo','multiple' => $this->multiple]),
-                  'options' => [
-                      'class' => 'form-horizontal',
-                      'enctype' => 'multipart/form-data',
-                      'data-bs-html' => "true",
-                      'data-bs-custom-class' => "custom-tooltip",
-                      'data-bs-toggle' => "tooltip",
-                      'title' => "Click to change the Logo"
-                  ],
-              ]);
-              $input .=' <input type="hidden" name="pict" value="<?php echo ($count + 1); ?>" />';
-              $input .= ActiveForm::end();
-              $input .='</a></div>';
-        }         
-        return $input;
-    }
- 
-    public function run1()
-    {
-        /*if (!$this->fileManagerPathTpl) {
-			throw new ErrorException('Specify fileManagerPathTpl in bootstrap.php for rahulabs\yii2\imgSelector\ImageSelector');
-		}*/
-        // иначе начинаем конфигурироваться
+        $reference = Yii::$app->gallery->getSessionUploadKey();
+        //echo $reference; die;
+        $imgId = null;
+        $image = Image::findOne(['reference' => $reference]);
         if (!array_key_exists('class', $this->options)) {
             $this->options['class'] = 'form-control';
         }
+       
         $this->options = array_merge($this->options, ['readonly' => true]);
         $input         = Html::hiddenInput($this->name, $this->value, $this->options);
         if ($this->hasModel()) {
-            $input = Html::activeTextInput($this->model, $this->attribute, $this->options);
+            $this->model->{$this->attribute} = $image->id;
+            $input = Html::activeHiddenInput($this->model, $this->attribute, $this->options);
         }
-        $url          = sprintf($this->fileManagerPathTpl, $this->options['id']);
-        $selectImgBtn = Html::a('Choose file', $url, [
-            'class' => 'btn iframe-btn btn-dark btn-sm',
+        $url          = Url::to(['/gallery/default/create','id'=>$this->model->{$this->attribute},'version'=>'medium']);
+       
+        $selectImgBtn = Html::a('Choose file', "", [
+            'class' =>'image-select-edit rel',// 'btn iframe-btn btn-dark btn-sm',
             'type'  => 'button',
-        ]);
-        $removeImgBtn = Html::tag('span', 'Delete file', [
-            'class'       => 'btn btn-danger js_RemoveImg btn-sm',
-            'type'        => 'button',
-            'data-img-id' => $this->options['id'],
-        ]);
-        $style = '';
-        if (!empty($this->options['value'])) {
-            $style = 'background-image:url("' . WEBSITE_URL . $this->options['value'] . '");';
-        }
-
-        if (isset($this->model->{$this->attribute})) {
-            $style = 'background-image:url("' . WEBSITE_URL . $this->model->{$this->attribute} . '");';
-        }
-        $imgPreview   = Html::tag('div', '&nbsp;', [
-            'id'    => 'preview__' . $this->options['id'],
-            'class' => 'imgSelectorPreview',
-            'style' => $style
-        ]);
-        echo '
-			<div class="row">
-				<div class="col-sm-12 mb-3">' . $imgPreview . '</div>
-				<div class="col-sm-12 center-block">' . $input . '<br>' . $selectImgBtn . ' ' . $removeImgBtn . '</div>
-			</div>
-		';
-
-        $this->registerClientScript();
+        ]);      
+        return $this->render('single', ['input'=>$input,'url' => $url]);
+       
     }
 
-  /*  private function registerClientScript()
-    {
-
-        $view = $this->getView();
-
-        static $init = null;
-        if (is_null($init)) {
-            $init = true;
-            $view->registerJs('$( document ).ready(function() { initImageSelectorPopups(); });', View::POS_READY);
-        }
-        ImageWidgetAsset::register($view);
-    }*/
     protected function registerClientScript()
     {
-        $clientOptions = array_merge($this->clientOptions, $this->remoteClientOptions());
-        $clientOptions = Json::encode($clientOptions);
+        //$clientOptions = $this->clientOptions;  //array_merge($this->clientOptions, $this->remoteClientOptions());
+       // $clientOptions = Json::encode($this->clientOptions);
         $view = $this->getView();
         $id = isset($this->options['id']) ? $this->options['id'] : $this->getId();
+        $asset = ImageWidgetAsset::register($view);
+        $js = <<< JS
+                $(document).on("click", ".delete", function (e) {
+                    e.preventDefault();
+                    $("#load").fadeIn();
+                    var id = $(this).attr("id");
+                    var string = "id=" + id;
+                    var imageContainer = $("#img-" + id);
+                    var pic_id;
+                    $.ajax({
+                    type: "POST",
+                    url: "/gallery/default/remove-image",
+                    data: string,
+                    cache: false,
+                    success: function () {
+                        imageContainer.hide();
+                        $("#ximg-" + id).show();
+                        $("#" + id).hide();
+                        $.pjax.reload({ container: "#gallery", async: false });
+                    },
+                    });
+                    return false;
+                });
+                var lastForm = $('form').last();
+                lastForm.hide();
+                $(".image_select a")
+                    .file()
+                    .choose(function (e, input) {
+                        console.log(input);                      
+                        lastForm.attr("method","post");
+                        lastForm.attr("enctype","multipart/form-data");
+                        lastForm.attr("action","/gallery/default/upload-photo?multiple=0");
+                        lastForm.innerHtml = "";
+                        input.appendTo(lastForm);
+                  
+                    lastForm.ajaxSubmit({
+                        beforeSubmit: function (formData, jqForm, options) {
+                       // var theId = $(".image_select form");
 
-        $view->registerJs("new DarkEditable($id,$clientOptions);");
+                        var queryString = $.param(formData);
+                      //  var formElement = formData[1]["pict"];
+                        console.log(queryString);
+                        pic_id = "0";//formElement;        
+                        return true;
+                        },
+                        success: function (responseText) {
+                            console.log(responseText);
+                        var span = $("<span/>");
+                        var btn = $("<i/>");
+                        btn.attr("id", responseText);
+
+                        btn.addClass("fa fa-minus-inverse");
+                        var img = $("<img/>")
+                            .bind("load", function (e) {
+                            $(e.target).click(function () {
+                                $(this).hide();
+                            });
+                            span.html(e.target);
+                            img.closest("span").append(btn);
+                            $("#add-file-" + pic_id).append(span);
+                            $("#ximg-" + parseInt(responseText) + " form").hide();
+                            })
+                            .attr("id", "img-" + responseText)
+                            .attr(
+                            "src",
+                            "/gallery/default/create?id=" +
+                                responseText.toString() +
+                                "&version=small&key=" +
+                                new Date().getTime()
+                            );        
+                           // $("#gallery").append(img);
+                            console.log(img.source);
+                            console.log("reloading...");
+                        $.pjax.reload({ container: "#gallery", async: true });        
+                        },
+                    });
+                    });
+                JS;
+        $view->registerJs($js);
         
         if ($this->clientEvents) {
             $js = [];
@@ -153,10 +156,27 @@ class ImageSelectInpuṭ extends InputWidget
                 $view->registerJs($js);
             }
         }
-        
-        $asset = ImageWidgetAsset::register($view);
-       /* if ($this->language) {
-            $asset->language = $this->language;
-        }*/
+    } 
+    protected function remoteClientOptions()
+    {
+        if ($this->remote) {
+            $options = [
+                'url' => Url::to($this->remote),
+                'delay' => 500,
+                'dataType' => 'json',
+                'data' => new JsExpression('function (params) {
+                    return {
+                        q: params.term,
+                    };
+                }'),
+                'processResults' => new JsExpression('function (data, params) {
+                    return { results: data };
+                }'),
+                'cache' => true,
+            ];
+
+            return ['ajax' => array_merge($options, $this->remoteOptions)];
+        }
+        return [];
     }
 }
