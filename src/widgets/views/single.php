@@ -9,7 +9,9 @@ use yii\helpers\Html;
         background-size: contain;
         border: 1px dashed #ccc;
     }
-
+    input[type=file] {
+        cursor: pointer;
+    }
 
 </style>
 <?php \yii\widgets\Pjax::begin(['id' => 'gallery']) ?>
@@ -19,6 +21,9 @@ use yii\helpers\Html;
         </a>        
     </div>
     <?= $input; ?>
+    <?php if($imgId > 0): ?>
     <?= Html::img($url);?>
-   
+   <?php else: ?>
+      <div class="empty-logo"></div>
+    <?php endif;?>
     <?php \yii\widgets\Pjax::end() ?>

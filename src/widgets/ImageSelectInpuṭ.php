@@ -1,6 +1,7 @@
 <?php
 
 namespace siripravi\gallery\widgets;
+
 use yii;
 use yii\helpers\Html;
 use yii\helpers\Url;
@@ -11,15 +12,16 @@ use siripravi\gallery\assets\ImageWidgetAsset;
 use siripravi\gallery\models\Image;
 use yii\base\ErrorException;
 use yii\helpers\Json;
+
 class ImageSelectInpuṭ extends InputWidget
 {
-      
-    public $remoteClientOptions = []; 
+
+    public $remoteClientOptions = [];
     public $url = "/gallery/default/";
     public $multiple = false;
     public $clientEvents = [];
-  public $remote;
-  
+    public $remote;
+
     public $label = 'upload';
     public function init()
     {
@@ -29,38 +31,37 @@ class ImageSelectInpuṭ extends InputWidget
         }
         parent::init();
     }
-  
+
     public function run()
     {
         $this->registerClientScript();
         $reference = Yii::$app->gallery->getSessionUploadKey();
         //echo $reference; die;
-        $imgId = null;
+
         $image = Image::findOne(['reference' => $reference]);
         if (!array_key_exists('class', $this->options)) {
             $this->options['class'] = 'form-control';
         }
-       
+        $imgId = ($image != null) ? $image->id : 0;
         $this->options = array_merge($this->options, ['readonly' => true]);
         $input         = Html::hiddenInput($this->name, $this->value, $this->options);
         if ($this->hasModel()) {
-            $this->model->{$this->attribute} = $image->id;
+            $this->model->{$this->attribute} = $imgId;
             $input = Html::activeHiddenInput($this->model, $this->attribute, $this->options);
         }
-        $url          = Url::to(['/gallery/default/create','id'=>$this->model->{$this->attribute},'version'=>'medium']);
-       
+        $url          = Url::to(['/gallery/default/create', 'id' => $this->model->{$this->attribute}, 'version' => 'medium']);
+
         $selectImgBtn = Html::a('Choose file', "", [
-            'class' =>'image-select-edit rel',// 'btn iframe-btn btn-dark btn-sm',
+            'class' => 'image-select-edit rel', // 'btn iframe-btn btn-dark btn-sm',
             'type'  => 'button',
-        ]);      
-        return $this->render('single', ['input'=>$input,'url' => $url]);
-       
+        ]);
+        return $this->render('single', ['input' => $input, 'url' => $url, 'imgId' => $imgId]);
     }
 
     protected function registerClientScript()
     {
         //$clientOptions = $this->clientOptions;  //array_merge($this->clientOptions, $this->remoteClientOptions());
-       // $clientOptions = Json::encode($this->clientOptions);
+        // $clientOptions = Json::encode($this->clientOptions);
         $view = $this->getView();
         $id = isset($this->options['id']) ? $this->options['id'] : $this->getId();
         $asset = ImageWidgetAsset::register($view);
@@ -123,7 +124,7 @@ class ImageSelectInpuṭ extends InputWidget
                             span.html(e.target);
                             img.closest("span").append(btn);
                             $("#add-file-" + pic_id).append(span);
-                            $("#ximg-" + parseInt(responseText) + " form").hide();
+                           // $("#ximg-" + parseInt(responseText) + " form").hide();
                             })
                             .attr("id", "img-" + responseText)
                             .attr(
@@ -136,13 +137,14 @@ class ImageSelectInpuṭ extends InputWidget
                            // $("#gallery").append(img);
                             console.log(img.source);
                             console.log("reloading...");
-                        $.pjax.reload({ container: "#gallery", async: true });        
+                        
+                        $.pjax.reload({ container: "#gallery", async: false });        
                         },
                     });
                     });
                 JS;
         $view->registerJs($js);
-        
+
         if ($this->clientEvents) {
             $js = [];
             foreach ($this->clientEvents as $event => $callback) {
@@ -156,7 +158,7 @@ class ImageSelectInpuṭ extends InputWidget
                 $view->registerJs($js);
             }
         }
-    } 
+    }
     protected function remoteClientOptions()
     {
         if ($this->remote) {

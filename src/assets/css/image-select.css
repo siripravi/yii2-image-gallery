@@ -83,3 +83,8 @@
   -o-transition: all 0.1s ease-out;
   transition: all 0.1s ease-out;
 }
+.empty-logo{
+  background-image: url("../images/empty_logo.png");  
+  width:162px;
+  height:162px;
+}
